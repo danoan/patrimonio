@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ t('acoes_detail.page_title', ticker=instrument.ticker) }}{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+  <h1 class="page-title" style="margin:0">{{ instrument.ticker }}</h1>
+  {% if instrument.name %}
+  <span style="color:var(--ink-muted);font-size:0.875rem">{{ instrument.name }}</span>
+  {% endif %}
+</div>
+
+{% include "partials/_instrument_detail.html" %}
+{% endblock %}

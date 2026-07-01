@@ -1,0 +1,119 @@
+{% from "partials/_editable_cell.html" import editable_cell %}
+{% from "partials/_resolution_cell.html" import resolution_cell with context %}
+{% from "partials/_notes_badge.html" import notes_badge with context %}
+{% macro txn_edit_url(txn_id, field) -%}
+/movimentos/{{ txn_id }}/field/{{ field }}/edit?view=ledger&page={{ txn_page.page }}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}
+{%- endmacro %}
+{% macro toggle_url(txn_id, needs_resolution) -%}
+/movimentos/{{ txn_id }}/needs-resolution?needs_resolution={{ needs_resolution }}&view=ledger&page={{ txn_page.page }}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}
+{%- endmacro %}
+{% macro resolve_edit_url(txn_id) -%}
+/movimentos/{{ txn_id }}/resolve/edit?view=ledger&page={{ txn_page.page }}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}
+{%- endmacro %}
+{% macro notes_open_url(txn_id) -%}
+/movimentos/{{ txn_id }}/notes?view=ledger&page={{ txn_page.page }}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}
+{%- endmacro %}
+{% macro txn_row(txn) %}
+<tr>
+  {{ editable_cell(txn_edit_url(txn.id, "date"), txn.date) }}
+  {{ editable_cell(txn_edit_url(txn.id, "comment"), txn.comment or "—") }}
+  {{ editable_cell(txn_edit_url(txn.id, "category"), txn.category or "—") }}
+  {{ editable_cell(txn_edit_url(txn.id, "tags"), txn.tags or "—") }}
+  <td>{{ account_names.get(txn.from_account, "—") }}</td>
+  <td>{{ account_names.get(txn.to_account, "—") }}</td>
+  {{ editable_cell(txn_edit_url(txn.id, "amount_cents"), txn.amount_cents | eur, "num") }}
+  {{ resolution_cell(txn, toggle_url(txn.id, "false" if txn.needs_resolution else "true"), resolve_edit_url(txn.id), "#ledger") }}
+  <td>{{ notes_badge(txn.id, note_counts.get(txn.id, 0), notes_open_url(txn.id)) }}</td>
+  <td>
+    <button
+      type="button"
+      class="btn btn--ghost"
+      style="color:var(--neg)"
+      title="{{ t('common.remove_txn') }}"
+      aria-label="{{ t('common.remove_txn') }}"
+      hx-delete="/movimentos/{{ txn.id }}?page={{ txn_page.page }}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}"
+      hx-target="#ledger"
+      hx-swap="outerHTML"
+      hx-confirm="{{ t('common.confirm_remove_txn') }}"
+    >🗑</button>
+  </td>
+</tr>
+{% endmacro %}
+{% macro txn_thead() %}
+<thead>
+  <tr>
+    <th>{{ t('common.table.date') }}</th>
+    <th>{{ t('common.table.description') }}</th>
+    <th>{{ t('common.table.category') }}</th>
+    <th>{{ t('common.table.tags') }}</th>
+    <th>{{ t('common.table.from') }}</th>
+    <th>{{ t('common.table.to') }}</th>
+    <th class="num">{{ t('common.table.amount') }}</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+</thead>
+{% endmacro %}
+<div id="ledger" class="table-wrap">
+  <div class="section-header">
+    <span class="section-title">{{ t('ledger.pending_heading') }}</span>
+  </div>
+  <table>
+    {{ txn_thead() }}
+    <tbody>
+      {% for txn in pending_txns %}
+      {{ txn_row(txn) }}
+      {% else %}
+      <tr>
+        <td colspan="10" style="color:var(--ink-muted);text-align:center;padding:2rem">
+          {{ t('ledger.no_pending') }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="section-header" style="margin-top:1.5rem">
+    <span class="section-title">{{ t('ledger.regular_heading') }}</span>
+  </div>
+  <table>
+    {{ txn_thead() }}
+    <tbody>
+      {% for txn in txn_page.txns %}
+      {{ txn_row(txn) }}
+      {% else %}
+      <tr>
+        <td colspan="10" style="color:var(--ink-muted);text-align:center;padding:2rem">
+          {{ t('overview.no_txns_yet') }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="form-row" style="justify-content:space-between;align-items:center;margin-top:0.75rem">
+    <span style="color:var(--ink-muted);font-size:0.875rem">
+      {{ t('ledger.page_summary', total=txn_page.total, page=txn_page.page, total_pages=txn_page.total_pages) }}
+    </span>
+    <div style="display:flex;gap:0.5rem">
+      <button
+        type="button"
+        class="btn btn--secondary"
+        {% if txn_page.page <= 1 %}disabled{% endif %}
+        hx-get="/movimentos?page={{ txn_page.page - 1 }}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}"
+        hx-target="#ledger"
+        hx-swap="outerHTML"
+        hx-push-url="true"
+      >{{ t('ledger.prev_button') }}</button>
+      <button
+        type="button"
+        class="btn btn--secondary"
+        {% if txn_page.page >= txn_page.total_pages %}disabled{% endif %}
+        hx-get="/movimentos?page={{ txn_page.page + 1 }}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}"
+        hx-target="#ledger"
+        hx-swap="outerHTML"
+        hx-push-url="true"
+      >{{ t('ledger.next_button') }}</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+{# chart_points: list[ValuationChartPoint] with x_pct, y_pct, period, balance_cents #}
+{% if chart_points|length > 1 %}
+{% set W = 800 %}
+{% set H = 140 %}
+{% set PAD_X = 10 %}
+{% set PAD_Y = 12 %}
+
+<svg viewBox="0 0 {{ W }} {{ H }}" width="100%" aria-label="{{ t('conta_detail.valuation_chart_aria') }}" role="img"
+     style="display:block;overflow:visible">
+
+  {% for pct in [0, 25, 50, 75, 100] %}
+  {% set y = PAD_Y + (H - 2 * PAD_Y) * pct / 100 %}
+  <line x1="{{ PAD_X }}" y1="{{ y }}" x2="{{ W - PAD_X }}" y2="{{ y }}"
+        stroke="var(--border)" stroke-width="1"/>
+  {% endfor %}
+
+  {% set inner_w = W - 2 * PAD_X %}
+  {% set inner_h = H - 2 * PAD_Y %}
+  <path fill="color-mix(in srgb, var(--accent) 12%, transparent)" d="
+    M {{ PAD_X + chart_points[0].x_pct / 100 * inner_w }} {{ PAD_Y + chart_points[0].y_pct / 100 * inner_h }}
+    {% for pt in chart_points[1:] %}
+    L {{ PAD_X + pt.x_pct / 100 * inner_w }} {{ PAD_Y + pt.y_pct / 100 * inner_h }}
+    {% endfor %}
+    L {{ PAD_X + chart_points[-1].x_pct / 100 * inner_w }} {{ H - PAD_Y }}
+    L {{ PAD_X + chart_points[0].x_pct / 100 * inner_w }} {{ H - PAD_Y }}
+    Z"/>
+
+  <polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"
+    points="{% for pt in chart_points %}{{ PAD_X + pt.x_pct / 100 * inner_w }},{{ PAD_Y + pt.y_pct / 100 * inner_h }} {% endfor %}"/>
+
+  {% for pt in chart_points %}
+  {% if loop.index0 % 3 == 0 or loop.last %}
+  {% set cx = PAD_X + pt.x_pct / 100 * inner_w %}
+  {% set cy = PAD_Y + pt.y_pct / 100 * inner_h %}
+  <circle cx="{{ cx }}" cy="{{ cy }}" r="3" fill="var(--accent)"/>
+  <text x="{{ cx }}" y="{{ cy - 6 }}" text-anchor="middle"
+        font-size="9" fill="var(--ink-muted)">{{ pt.period }}</text>
+  {% endif %}
+  {% endfor %}
+
+</svg>
+
+<div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--ink-muted);margin-top:0.25rem">
+  <span>{{ chart_points[0].balance_cents | eur }}</span>
+  <span>{{ chart_points[-1].balance_cents | eur }}</span>
+</div>
+{% endif %}

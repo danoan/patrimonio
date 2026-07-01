@@ -1,0 +1,23 @@
+{% macro resolution_cell(txn, toggle_url, resolve_url, target) %}
+<td>
+  <button
+    type="button"
+    class="btn btn--ghost"
+    style="{% if txn.needs_resolution %}color:var(--tier-diferido){% endif %}"
+    title="{{ t('resolution.flag_tooltip') }}"
+    aria-label="{{ t('resolution.flag_tooltip') }}"
+    hx-patch="{{ toggle_url }}"
+    hx-target="{{ target }}"
+    hx-swap="outerHTML"
+  >🚩</button>
+  {% if txn.needs_resolution %}
+  <button
+    type="button"
+    class="badge {{ 'badge--resolved' if is_resolved(txn) else 'badge--pending' }}"
+    hx-get="{{ resolve_url }}"
+    hx-target="#resolve-modal-container"
+    hx-swap="innerHTML"
+  >{{ t('resolution.resolved_label') if is_resolved(txn) else t('resolution.pending_label') }}</button>
+  {% endif %}
+</td>
+{% endmacro %}

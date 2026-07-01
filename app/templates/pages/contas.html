@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ t('contas.page_title') }}{% endblock %}
+{% block content %}
+<h1 class="page-title">{{ t('contas.heading') }}</h1>
+
+<form hx-post="/contas" hx-target="#account-list" hx-swap="outerHTML" class="form-row" style="margin-bottom:1.5rem">
+  <div class="field">
+    <label for="a-code">{{ t('common.table.code') }}</label>
+    <input id="a-code" type="text" name="code" placeholder="{{ t('contas.code_placeholder') }}" required>
+  </div>
+  <div class="field" style="flex:2;min-width:160px">
+    <label for="a-name">{{ t('common.table.name') }}</label>
+    <input id="a-name" type="text" name="name" required>
+  </div>
+  <div class="field">
+    <label for="a-tier">{{ t('common.table.tier') }}</label>
+    <select id="a-tier" name="tier">
+      <option value="Imediato">{{ t('tier.imediato') }}</option>
+      <option value="Diferido">{{ t('tier.diferido') }}</option>
+      <option value="Alocado">{{ t('tier.alocado') }}</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="a-account-type">{{ t('common.table.type') }}</label>
+    <select id="a-account-type" name="account_type">
+      <option value="checking">{{ t('account_type.checking') }}</option>
+      <option value="savings">{{ t('account_type.savings') }}</option>
+      <option value="variable">{{ t('account_type.variable') }}</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="a-currency">{{ t('common.table.currency') }}</label>
+    <select id="a-currency" name="currency">
+      <option value="EUR">EUR</option>
+      <option value="USD">USD</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="a-opening">{{ t('contas.opening_balance_label') }}</label>
+    <input id="a-opening" type="text" name="opening_str" class="num-input" value="0,00">
+  </div>
+  <div class="field">
+    <label for="a-date">{{ t('contas.opening_date_label') }}</label>
+    <input id="a-date" type="date" name="opening_date" required>
+  </div>
+  <div class="field" style="justify-content:flex-end">
+    <button type="submit" class="btn btn--primary">{{ t('common.actions.add') }}</button>
+  </div>
+</form>
+
+<div id="account-list">
+  {% include "partials/_account_list.html" %}
+</div>
+{% endblock %}

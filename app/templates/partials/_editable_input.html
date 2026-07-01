@@ -1,0 +1,34 @@
+{% if kind == "select" %}
+<select
+  name="value"
+  class="editable-input"
+  data-editable-input
+  data-original="{{ original }}"
+  hx-patch="{{ patch_url }}"
+  hx-trigger="change, blur[this.dataset.cancelled!='1']"
+  hx-target="{{ target }}"
+  hx-swap="outerHTML"
+  autofocus
+>
+  {% for opt_value, opt_label in options %}
+  <option value="{{ opt_value }}" {% if opt_value == value %}selected{% endif %}>{{ opt_label }}</option>
+  {% endfor %}
+</select>
+{% else %}
+<input
+  type="{{ 'date' if kind == 'date' else 'text' }}"
+  name="value"
+  value="{{ value }}"
+  class="editable-input{{ ' num-input' if kind in ('money', 'percent') else '' }}"
+  data-editable-input
+  data-original="{{ original }}"
+  hx-patch="{{ patch_url }}"
+  hx-trigger="keyup[key=='Enter'], blur[this.dataset.cancelled!='1']"
+  hx-target="{{ target }}"
+  hx-swap="outerHTML"
+  autofocus
+>
+{% endif %}
+{% if error %}
+<div class="editable-error">{{ error }}</div>
+{% endif %}

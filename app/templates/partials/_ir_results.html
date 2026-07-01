@@ -1,0 +1,65 @@
+<div id="ir-results">
+{% if not results %}
+<p style="color:var(--ink-muted)">
+  {{ t('common.configure_people_first') | safe }}
+</p>
+{% else %}
+
+<div class="kpi-grid" style="margin-bottom:1.5rem">
+  {% for r in results %}
+  <div class="kpi-card">
+    <div class="kpi-card__label" title="{{ t('ir.annual_ir_hint') }}">{{ t('ir.annual_ir_label', name=r.person_name) }}</div>
+    <div class="kpi-card__value neg">{{ r.ir_annual_cents | eur }}</div>
+    <div style="font-size:0.75rem;color:var(--ink-muted);margin-top:0.35rem">
+      {{ t('ir.effective_rate', pct=(r.effective_rate | pct)) }}
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-card__label" title="{{ t('ir.monthly_ir_hint') }}">{{ t('ir.monthly_ir_label', name=r.person_name) }}</div>
+    <div class="kpi-card__value neg">{{ r.ir_monthly_cents | eur }}</div>
+    <div style="font-size:0.75rem;margin-top:0.35rem
+      {% if r.delta_cents > 0 %}; color:var(--neg){% elif r.delta_cents < 0 %}; color:var(--pos){% else %}; color:var(--ink-muted){% endif %}">
+      {% if r.delta_cents != 0 %}
+        {{ t('ir.delta_vs_declared', amount=(r.delta_cents | eur)) }}
+      {% else %}
+        {{ t('ir.delta_equal') }}
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('ir.col_person') }}</th>
+        <th class="num">{{ t('ir.col_gross_annual') }}</th>
+        <th class="num">{{ t('ir.col_deduction') }}</th>
+        <th class="num">{{ t('ir.col_taxable') }}</th>
+        <th class="num" title="{{ t('ir.annual_ir_hint') }}">{{ t('ir.col_annual_ir') }}</th>
+        <th class="num" title="{{ t('ir.monthly_ir_hint') }}">{{ t('ir.col_monthly_calc') }}</th>
+        <th class="num" title="{{ t('ir.col_monthly_declared_hint') }}">{{ t('ir.col_monthly_declared') }}</th>
+        <th class="num">{{ t('ir.col_diff') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+      <tr>
+        <td>{{ r.person_name }}</td>
+        <td class="num">{{ r.gross_annual_cents | eur }}</td>
+        <td class="num neg">{{ r.deduction_cents | eur }}</td>
+        <td class="num">{{ r.taxable_cents | eur }}</td>
+        <td class="num neg">{{ r.ir_annual_cents | eur }}</td>
+        <td class="num neg">{{ r.ir_monthly_cents | eur }}</td>
+        <td class="num neg">{{ (r.ir_monthly_cents - r.delta_cents) | eur }}</td>
+        <td class="num {% if r.delta_cents > 0 %}neg{% elif r.delta_cents < 0 %}pos{% endif %}">
+          {% if r.delta_cents != 0 %}{{ r.delta_cents | eur }}{% else %}—{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+</div>

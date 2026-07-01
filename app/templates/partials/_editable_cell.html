@@ -1,0 +1,10 @@
+{% macro editable_cell(edit_url, display, extra_class="", safe=False) %}
+<td
+  class="editable-cell{{ ' ' ~ extra_class if extra_class else '' }}"
+  hx-get="{{ edit_url }}"
+  hx-trigger="click"
+  hx-target="this"
+  hx-swap="innerHTML"
+  tabindex="0"
+>{{ display | safe if safe else display }}</td>
+{% endmacro %}

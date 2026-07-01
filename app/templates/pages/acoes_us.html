@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ t('acoes_us.page_title') }}{% endblock %}
+{% block content %}
+<h1 class="page-title">{{ t('acoes_us.heading') }}</h1>
+
+<form hx-post="/acoes-us/events" hx-target="#usd-section" hx-swap="outerHTML" class="form-row" style="margin-bottom:1.5rem">
+  <div class="field">
+    <label for="u-date">{{ t('common.table.date') }}</label>
+    <input id="u-date" type="date" name="date" required>
+  </div>
+  <div class="field">
+    <label for="u-kind">{{ t('common.table.type') }}</label>
+    <select id="u-kind" name="kind">
+      <option value="vesting">{{ t('usd_kind.vesting') }}</option>
+      <option value="sale">{{ t('usd_kind.sale') }}</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="u-gross">{{ t('acoes_us.gross_label') }}</label>
+    <input id="u-gross" type="text" name="gross_str" class="num-input" placeholder="0,00" required>
+  </div>
+  <div class="field">
+    <label for="u-net">{{ t('acoes_us.net_label') }}</label>
+    <input id="u-net" type="text" name="net_str" class="num-input" placeholder="0,00" required>
+  </div>
+  <div class="field">
+    <label for="u-fx">{{ t('acoes_us.fx_label') }}</label>
+    <input id="u-fx" type="text" name="fx_str" placeholder="{{ t('acoes_us.fx_placeholder') }}" required>
+  </div>
+  <div class="field" style="justify-content:flex-end">
+    <button type="submit" class="btn btn--primary">{{ t('common.actions.register') }}</button>
+  </div>
+</form>
+
+{% include "partials/_usd_section.html" %}
+{% endblock %}

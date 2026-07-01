@@ -1,0 +1,11 @@
+{% if pending %}
+<div class="pending-banner" id="pending-banner" hx-swap-oob="true">
+  <span>{{ t('recorrentes.pending_banner', count=pending|length, period=period) }}</span>
+  <form hx-post="/recorrentes/post-all" hx-target="#recurring-list" hx-swap="outerHTML">
+    <input type="hidden" name="period" value="{{ period }}">
+    <button type="submit" class="btn btn--primary" style="font-size:0.75rem;padding:0.3rem 0.75rem">{{ t('recorrentes.post_all_button') }}</button>
+  </form>
+</div>
+{% else %}
+<div id="pending-banner" hx-swap-oob="true"></div>
+{% endif %}

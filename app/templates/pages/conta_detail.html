@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block title %}{{ t('conta_detail.page_title', code=account.code) }}{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+  <h1 class="page-title" style="margin:0">{{ account.code }}</h1>
+  <span class="tier tier--{{ account.tier }}">{{ t('tier.' ~ account.tier|lower) if account.tier else "" }}</span>
+  <span style="color:var(--ink-muted);font-size:0.875rem">{{ account.name }}</span>
+</div>
+
+<div class="kpi-grid" style="margin-bottom:1.5rem">
+  <div class="kpi-card">
+    <div class="kpi-card__label">{{ t('conta_detail.current_balance') }}</div>
+    <div id="current-balance-value" class="kpi-card__value {% if current_balance >= 0 %}pos{% else %}neg{% endif %}">
+      {{ current_balance | eur }}
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-card__label">{{ t('conta_detail.opening_balance') }}</div>
+    <div class="kpi-card__value">{{ account.opening_cents | eur }}</div>
+  </div>
+</div>
+
+<div class="section-header">
+  <span class="section-title">{{ t('conta_detail.statement') }}</span>
+  <button type="button" class="btn btn--secondary" data-modal-open="add-txn-modal">{{ t('conta_detail.add_txn_button') }}</button>
+</div>
+
+<dialog id="add-txn-modal" class="modal">
+  <div class="modal__panel">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ t('conta_detail.add_txn_modal_title') }}</h2>
+      <button type="button" class="modal__close" data-modal-close aria-label="{{ t('common.close') }}">&times;</button>
+    </div>
+    <div data-tab-group class="tab-bar" style="padding:0 1.25rem">
+      <button type="button" class="tab-btn active" data-tab="once">{{ t('conta_detail.tab_once') }}</button>
+      <button type="button" class="tab-btn" data-tab="recurring">{{ t('conta_detail.tab_recurring') }}</button>
+    </div>
+
+    <div data-panel="once">
+      <form hx-post="/contas/{{ account.id }}/lancamentos" hx-target="#account-statement" hx-swap="outerHTML" data-modal-form class="modal__body">
+        <div class="field-grid">
+          <div class="field">
+            <label for="t-date">{{ t('common.table.date') }}</label>
+            <input id="t-date" type="date" name="date" required>
+          </div>
+          <div class="field">
+            <label for="t-from">{{ t('movimentos.from_account_label') }}</label>
+            <select id="t-from" name="from_account">
+              <option value="">{{ t('common.placeholder.external') }}</option>
+              {% for a in account_list %}<option value="{{ a.id }}">{{ a.code }} — {{ a.name }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label for="t-to">{{ t('movimentos.to_account_label') }}</label>
+            <select id="t-to" name="to_account">
+              <option value="">{{ t('common.placeholder.external') }}</option>
+              {% for a in account_list %}
+              <option value="{{ a.id }}" {% if a.id == account.id %}selected{% endif %}>{{ a.code }} — {{ a.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label for="t-amount">{{ t('movimentos.amount_label') }}</label>
+            <input id="t-amount" type="text" name="amount_str" class="num-input" placeholder="0,00" required>
+          </div>
+          <div class="field">
+            <label for="t-cat">{{ t('common.table.category') }}</label>
+            <input id="t-cat" type="text" name="category" placeholder="{{ t('common.placeholder.optional') }}">
+          </div>
+          <div class="field field--span2">
+            <label for="t-comment">{{ t('common.table.description') }}</label>
+            <input id="t-comment" type="text" name="comment" placeholder="{{ t('common.placeholder.optional') }}">
+          </div>
+          <div class="field">
+            <label for="t-tags">{{ t('common.table.tags') }}</label>
+            <input id="t-tags" type="text" name="tags" placeholder="{{ t('common.placeholder.optional') }}">
+          </div>
+          <div class="field" style="justify-content:flex-end">
+            <label for="t-needs-resolution" style="display:flex;align-items:center;gap:0.35rem;font-size:0.8rem;color:var(--ink-muted);font-weight:normal">
+              <input id="t-needs-resolution" type="checkbox" name="needs_resolution">
+              {{ t('movimentos.needs_resolution_label') }}
+            </label>
+          </div>
+        </div>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--secondary" data-modal-close>{{ t('common.actions.cancel') }}</button>
+          <button type="submit" class="btn btn--primary">{{ t('common.actions.add') }}</button>
+        </div>
+      </form>
+    </div>
+
+    <div data-panel="recurring" hidden>
+      <form hx-post="/recorrentes?view=statement&account_id={{ account.id }}" hx-target="#account-statement" hx-swap="outerHTML" data-modal-form class="modal__body">
+        <div class="field-grid">
+          <div class="field">
+            <label for="rt-kind">{{ t('recorrentes.type_label') }}</label>
+            <select id="rt-kind" name="kind">
+              <option value="fixed">{{ t('recurring_kind.fixed') }}</option>
+              <option value="installment">{{ t('recurring_kind.installment') }}</option>
+            </select>
+          </div>
+          <div class="field field--span2">
+            <label for="rt-desc">{{ t('common.table.description') }}</label>
+            <input id="rt-desc" type="text" name="description" required>
+          </div>
+          <div class="field">
+            <label for="rt-category">{{ t('common.table.category') }}</label>
+            <input id="rt-category" type="text" name="category" placeholder="{{ t('common.placeholder.optional') }}">
+          </div>
+          <div class="field">
+            <label for="rt-from">{{ t('common.table.from') }}</label>
+            <select id="rt-from" name="from_account">
+              <option value="">{{ t('common.placeholder.external') }}</option>
+              {% for a in account_list %}<option value="{{ a.id }}">{{ a.code }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label for="rt-to">{{ t('common.table.to') }}</label>
+            <select id="rt-to" name="to_account">
+              <option value="">{{ t('common.placeholder.external') }}</option>
+              {% for a in account_list %}
+              <option value="{{ a.id }}" {% if a.id == account.id %}selected{% endif %}>{{ a.code }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label for="rt-amount">{{ t('recorrentes.amount_label') }}</label>
+            <input id="rt-amount" type="text" name="amount_str" class="num-input" placeholder="0,00" required>
+          </div>
+          <div class="field">
+            <label for="rt-day">{{ t('recorrentes.day_label') }}</label>
+            <input id="rt-day" type="number" name="day_of_month" value="1" min="1" max="28">
+          </div>
+          <div class="field">
+            <label for="rt-installments">{{ t('recorrentes.installments_label') }}</label>
+            <input id="rt-installments" type="number" name="installments" placeholder="—" min="1">
+          </div>
+          <div class="field">
+            <label for="rt-start">{{ t('recorrentes.start_label') }}</label>
+            <input id="rt-start" type="month" name="start_period">
+          </div>
+          <div class="field">
+            <label for="rt-end">{{ t('recorrentes.end_label') }}</label>
+            <input id="rt-end" type="month" name="end_period">
+          </div>
+          <div class="field field--span2">
+            <label for="rt-notes">{{ t('recurring_list.notes_label') }}</label>
+            <textarea id="rt-notes" name="notes" rows="3" placeholder="{{ t('common.placeholder.optional') }}"></textarea>
+          </div>
+          <div class="field field--span2">
+            <label for="rt-tags">{{ t('common.table.tags') }}</label>
+            <input id="rt-tags" type="text" name="tags" placeholder="{{ t('recurring_list.tags_placeholder') }}">
+          </div>
+        </div>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--secondary" data-modal-close>{{ t('common.actions.cancel') }}</button>
+          <button type="submit" class="btn btn--primary">{{ t('common.actions.add') }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+{% include "partials/_account_statement.html" %}
+<div id="resolve-modal-container"></div>
+<div id="notes-modal-container"></div>
+
+<div class="section-header" style="margin-top:2rem">
+  <span class="section-title">{{ t('conta_detail.valuations_section') }}</span>
+</div>
+{% include "partials/_account_valuations.html" %}
+{% endblock %}

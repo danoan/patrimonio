@@ -1,0 +1,94 @@
+{% if oob_balance %}
+<div id="current-balance-value" hx-swap-oob="true" class="kpi-card__value {% if current_balance >= 0 %}pos{% else %}neg{% endif %}">
+  {{ current_balance | eur }}
+</div>
+{% endif %}
+<div id="account-valuations">
+  {% if performance %}
+  <div class="kpi-grid" style="margin-bottom:1.25rem">
+    <div class="kpi-card">
+      <div class="kpi-card__label">{{ t('conta_detail.contributed_label') }}</div>
+      <div class="kpi-card__value">{{ performance.net_contributed_cents | eur }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card__label">{{ t('conta_detail.market_value_label') }}</div>
+      <div class="kpi-card__value">{{ performance.market_value_cents | eur }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card__label">{{ t('conta_detail.unrealized_gain_label') }}</div>
+      <div class="kpi-card__value {% if performance.unrealized_gain_cents >= 0 %}pos{% else %}neg{% endif %}">
+        {{ performance.unrealized_gain_cents | eur }}
+        {% if performance.unrealized_gain_pct is not none %}
+        <span style="font-size:0.75rem;color:var(--ink-muted)">({{ performance.unrealized_gain_pct | pct }})</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% include "partials/_account_valuation_chart.html" %}
+
+  <div class="table-wrap" style="margin-top:1rem">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ t('projecao.col_period') }}</th>
+          <th class="num">{{ t('common.table.balance') }}</th>
+          <th class="num">{{ t('conta_detail.col_contributions') }}</th>
+          <th class="num">{{ t('conta_detail.col_gain') }}</th>
+          <th class="num">{{ t('conta_detail.col_gain_pct') }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in valuation_history | reverse %}
+        <tr>
+          <td>{{ row.period }}</td>
+          <td class="num">{{ row.balance_cents | eur }}</td>
+          <td class="num">{{ row.contributions_cents | eur }}</td>
+          <td class="num {% if row.gain_cents >= 0 %}pos{% else %}neg{% endif %}">{{ row.gain_cents | eur }}</td>
+          <td class="num {% if row.gain_cents >= 0 %}pos{% else %}neg{% endif %}">
+            {% if row.gain_pct is not none %}{{ row.gain_pct | pct }}{% else %}—{% endif %}
+          </td>
+          <td>
+            <button
+              type="button"
+              class="btn btn--ghost"
+              style="color:var(--neg)"
+              title="{{ t('common.remove_valuation') }}"
+              aria-label="{{ t('common.remove_valuation') }}"
+              hx-delete="/contas/{{ account_id }}/valuations/{{ row.period }}"
+              hx-target="#account-valuations"
+              hx-swap="outerHTML"
+              hx-confirm="{{ t('common.confirm_remove_valuation') }}"
+            >🗑</button>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" style="color:var(--ink-muted);text-align:center;padding:2rem">
+            {{ t('conta_detail.no_valuations') }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <form hx-post="/contas/{{ account_id }}/valuations" hx-target="#account-valuations" hx-swap="outerHTML" class="form-row" style="margin-top:1rem">
+    <div class="field">
+      <label>{{ t('conta_detail.valuation_period_label') }}</label>
+      <input type="month" name="period" value="{{ default_period }}" required>
+    </div>
+    <div class="field">
+      <label>{{ t('conta_detail.valuation_balance_label') }}</label>
+      <input type="text" name="balance_str" class="num-input" placeholder="0,00" required>
+    </div>
+    <div class="field" style="justify-content:flex-end">
+      <button type="submit" class="btn btn--primary">{{ t('common.actions.register') }}</button>
+    </div>
+  </form>
+  {% if error %}
+  <p class="editable-error" style="margin-top:0.5rem">{{ error }}</p>
+  {% endif %}
+</div>

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{{ t('projecao.page_title') }}{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem">
+  <h1 class="page-title" style="margin:0">{{ t('projecao.heading') }}</h1>
+  <span style="color:var(--ink-muted);font-size:0.875rem">{{ t('projecao.next_months', months=months) }}</span>
+  <div style="margin-left:auto;display:flex;gap:0.5rem">
+    <a href="/projecao?months=12" class="btn btn--secondary {% if months == 12 %}active{% endif %}" style="font-size:0.8rem;padding:0.3rem 0.7rem">{{ t('projecao.months_12') }}</a>
+    <a href="/projecao?months=24" class="btn btn--secondary {% if months == 24 %}active{% endif %}" style="font-size:0.8rem;padding:0.3rem 0.7rem">{{ t('projecao.months_24') }}</a>
+    <a href="/projecao?months=36" class="btn btn--secondary {% if months == 36 %}active{% endif %}" style="font-size:0.8rem;padding:0.3rem 0.7rem">{{ t('projecao.months_36') }}</a>
+  </div>
+</div>
+
+{% if not projections %}
+<p style="color:var(--ink-muted)">{{ t('projecao.add_accounts_hint') }}</p>
+{% else %}
+
+{% set last = projections[-1] %}
+<div class="kpi-grid" style="margin-bottom:1.5rem">
+  <div class="kpi-card kpi-card--imediato">
+    <div class="kpi-card__label">{{ t('projecao.imediato_at', period=last.period) }}</div>
+    <div class="kpi-card__value">{{ last.tier_totals.get("Imediato", 0) | eur }}</div>
+  </div>
+  <div class="kpi-card kpi-card--diferido">
+    <div class="kpi-card__label">{{ t('projecao.diferido_at', period=last.period) }}</div>
+    <div class="kpi-card__value">{{ last.tier_totals.get("Diferido", 0) | eur }}</div>
+  </div>
+  <div class="kpi-card kpi-card--alocado">
+    <div class="kpi-card__label">{{ t('projecao.alocado_at', period=last.period) }}</div>
+    <div class="kpi-card__value">{{ last.tier_totals.get("Alocado", 0) | eur }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-card__label">{{ t('projecao.total_at', period=last.period) }}</div>
+    <div class="kpi-card__value">{{ last.grand_total | eur }}</div>
+  </div>
+</div>
+
+<div class="chart-wrap" style="margin-bottom:1.5rem">
+  <div class="section-header" style="margin-bottom:0.75rem">
+    <span class="section-title">{{ t('projecao.projected_evolution') }}</span>
+  </div>
+  {% include "partials/_projection_chart.html" %}
+</div>
+
+<div class="section-header">
+  <span class="section-title">{{ t('projecao.monthly_detail') }}</span>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('projecao.col_period') }}</th>
+        <th class="num">{{ t('tier.imediato') }}</th>
+        <th class="num">{{ t('tier.diferido') }}</th>
+        <th class="num">{{ t('tier.alocado') }}</th>
+        <th class="num">{{ t('kpis.total') }}</th>
+        <th class="num">{{ t('projecao.col_delta_month') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in projections %}
+      {% set prev_total = projections[loop.index0 - 1].grand_total if loop.index0 > 0 else p.grand_total %}
+      {% set delta = p.grand_total - prev_total %}
+      <tr>
+        <td>{{ p.period }}</td>
+        <td class="num">{{ p.tier_totals.get("Imediato", 0) | eur }}</td>
+        <td class="num">{{ p.tier_totals.get("Diferido", 0) | eur }}</td>
+        <td class="num">{{ p.tier_totals.get("Alocado", 0) | eur }}</td>
+        <td class="num">{{ p.grand_total | eur }}</td>
+        <td class="num {% if delta >= 0 %}pos{% else %}neg{% endif %}">
+          {% if loop.index0 > 0 %}{{ delta | eur }}{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

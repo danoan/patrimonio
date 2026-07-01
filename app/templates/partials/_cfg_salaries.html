@@ -1,0 +1,36 @@
+{% from "partials/_editable_cell.html" import editable_cell %}
+{% macro person_edit_url(person_id, field) -%}
+/config/pessoas/{{ person_id }}/field/{{ field }}/edit
+{%- endmacro %}
+<div id="salaries" class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('cfg_salaries.col_person') }}</th>
+        <th class="num">{{ t('cfg_salaries.col_gross') }}</th>
+        <th class="num">{{ t('cfg_salaries.col_net_before_taxes') }}</th>
+        <th class="num" title="{{ t('cfg_salaries.col_net_before_taxes_avg_hint') }}">{{ t('cfg_salaries.col_net_before_taxes_avg') }}</th>
+        <th class="num">{{ t('cfg_salaries.col_ir') }}</th>
+        <th class="num">{{ t('cfg_salaries.col_net') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ni in people %}
+      <tr>
+        {{ editable_cell(person_edit_url(ni.person.id, "name"), ni.person.name) }}
+        {{ editable_cell(person_edit_url(ni.person.id, "gross_cents"), ni.person.gross_cents | eur, "num") }}
+        {{ editable_cell(person_edit_url(ni.person.id, "net_before_taxes_cents"), ni.person.net_before_taxes_cents | eur, "num") }}
+        {{ editable_cell(person_edit_url(ni.person.id, "net_before_taxes_avg_cents"), ni.person.net_before_taxes_avg_cents | eur, "num") }}
+        {{ editable_cell(person_edit_url(ni.person.id, "ir_rate"), (ni.person.ir_rate | pct) ~ " (" ~ (ni.ir_cents | eur) ~ ")", "num neg") }}
+        <td class="num pos">{{ ni.net_income_cents | eur }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="color:var(--ink-muted);text-align:center;padding:1.5rem">
+          {{ t('cfg_salaries.no_people') }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

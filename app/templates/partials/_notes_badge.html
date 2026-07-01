@@ -1,0 +1,14 @@
+{% macro notes_badge(txn_id, count, open_url, oob=False) %}
+<span id="txn-notes-badge-{{ txn_id }}"{% if oob %} hx-swap-oob="true"{% endif %}>
+  <button
+    type="button"
+    class="btn btn--ghost"
+    style="{% if count %}color:var(--tier-diferido){% endif %}"
+    title="{{ t('txn_notes.badge_tooltip') }}"
+    aria-label="{{ t('txn_notes.badge_tooltip') }}"
+    hx-get="{{ open_url }}"
+    hx-target="#notes-modal-container"
+    hx-swap="innerHTML"
+  >📝{% if count %} {{ count }}{% endif %}</button>
+</span>
+{% endmacro %}

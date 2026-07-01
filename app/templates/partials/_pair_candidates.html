@@ -1,0 +1,10 @@
+{% for c in candidates %}
+<div
+  class="pair-picker__item"
+  data-pair-candidate
+  data-pair-id="{{ c.id }}"
+  data-pair-label="{{ c.date }} — {{ c.comment or c.category or '—' }} — {{ c.amount_cents | eur }}"
+>{{ c.date }} — {{ c.comment or c.category or "—" }} — {{ c.amount_cents | eur }}</div>
+{% else %}
+<div class="pair-picker__item pair-picker__item--empty">{{ t('resolution.pair_no_results') }}</div>
+{% endfor %}

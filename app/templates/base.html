@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="{{ current_locale() }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ t('common.app_title') }}{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script src="/static/js/htmx.min.js"></script>
+  <script defer src="/static/js/app.js"></script>
+</head>
+<body>
+  <nav class="sidebar" aria-label="{{ t('common.nav_aria') }}">
+    <div class="sidebar__logo">{{ t('common.app_name') }}</div>
+    <ul class="sidebar__nav">
+      <li><a href="/" {% if request.url.path == "/" %}class="active"{% endif %}>{{ t('nav.overview') }}</a></li>
+      <li><a href="/movimentos" {% if request.url.path.startswith("/movimentos") %}class="active"{% endif %}>{{ t('nav.launch') }}</a></li>
+      <li><a href="/recorrentes" {% if request.url.path.startswith("/recorrentes") %}class="active"{% endif %}>{{ t('nav.recurring') }}</a></li>
+      <li><a href="/divisao" {% if request.url.path.startswith("/divisao") %}class="active"{% endif %}>{{ t('nav.division') }}</a></li>
+      <li><a href="/contas" {% if request.url.path.startswith("/contas") %}class="active"{% endif %}>{{ t('nav.accounts') }}</a></li>
+      <li><a href="/acoes" {% if request.url.path == "/acoes" %}class="active"{% endif %}>{{ t('nav.stocks_eur') }}</a></li>
+      <li><a href="/acoes-us" {% if request.url.path.startswith("/acoes-us") %}class="active"{% endif %}>{{ t('nav.stocks_usd') }}</a></li>
+      <li><a href="/projecao" {% if request.url.path.startswith("/projecao") %}class="active"{% endif %}>{{ t('nav.projection') }}</a></li>
+      <li><a href="/ir" {% if request.url.path.startswith("/ir") %}class="active"{% endif %}>{{ t('nav.ir') }}</a></li>
+      <li><a href="/config" {% if request.url.path.startswith("/config") %}class="active"{% endif %}>{{ t('nav.settings') }}</a></li>
+    </ul>
+    <div class="sidebar__locale">
+      <a href="/locale/pt" title="{{ t('locale.pt_label') }}" {% if current_locale() == "pt" %}class="active"{% endif %}>PT</a>
+      <a href="/locale/en" title="{{ t('locale.en_label') }}" {% if current_locale() == "en" %}class="active"{% endif %}>EN</a>
+    </div>
+  </nav>
+  <main class="main">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

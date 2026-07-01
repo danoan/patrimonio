@@ -1,0 +1,351 @@
+{
+  "common": {
+    "app_title": "Patrimônio",
+    "app_name": "patrimônio",
+    "nav_aria": "Navegação principal",
+    "table": {
+      "date": "Data",
+      "description": "Descrição",
+      "category": "Categoria",
+      "amount": "Valor",
+      "code": "Código",
+      "name": "Nome",
+      "tier": "Tier",
+      "currency": "Moeda",
+      "balance": "Saldo",
+      "from": "De",
+      "to": "Para",
+      "type": "Tipo",
+      "tags": "Tags"
+    },
+    "actions": {
+      "add": "Adicionar",
+      "save": "Salvar",
+      "register": "Registrar",
+      "filter": "Filtrar",
+      "clear": "Limpar",
+      "cancel": "Cancelar",
+      "post": "Lançar",
+      "skip": "Pular"
+    },
+    "placeholder": {
+      "optional": "opcional",
+      "external": "— externo —"
+    },
+    "close": "Fechar",
+    "remove_txn": "Remover lançamento",
+    "confirm_remove_txn": "Remover este lançamento?",
+    "remove_rule": "Remover regra",
+    "remove_valuation": "Remover avaliação",
+    "confirm_remove_valuation": "Remover esta avaliação?",
+    "configure_people_first": "Configure as pessoas em <a href=\"/config\">Configurações</a> primeiro.",
+    "invalid_value": "Valor inválido"
+  },
+  "locale": {
+    "pt_label": "Português",
+    "en_label": "English"
+  },
+  "nav": {
+    "overview": "Visão geral",
+    "launch": "Lançar",
+    "recurring": "Recorrentes",
+    "division": "Divisão",
+    "accounts": "Contas",
+    "stocks_eur": "Ações €",
+    "stocks_usd": "Ações US$",
+    "projection": "Projeção",
+    "ir": "IR",
+    "settings": "Configurações"
+  },
+  "tier": {
+    "imediato": "Imediato",
+    "diferido": "Diferido",
+    "alocado": "Alocado",
+    "imediato_hint": "Dinheiro disponível de imediato: contas correntes e poupanças de acesso livre.",
+    "diferido_hint": "Investimentos de médio/longo prazo, sem acesso imediato (seguros de vida, SCPI, etc.).",
+    "alocado_hint": "Dinheiro reservado para um fim específico (impostos, viagens, projetos)."
+  },
+  "account_type": {
+    "checking": "Conta corrente",
+    "savings": "Poupança",
+    "variable": "Variável"
+  },
+  "recurring_kind": {
+    "fixed": "Fixo",
+    "installment": "Parcelas"
+  },
+  "trade_kind": {
+    "buy": "Compra",
+    "sell": "Venda"
+  },
+  "usd_kind": {
+    "vesting": "Vesting",
+    "sale": "Venda"
+  },
+  "kpis": {
+    "total": "Total"
+  },
+  "overview": {
+    "page_title": "Visão geral — Patrimônio",
+    "heading": "Visão geral",
+    "monthly_evolution": "Evolução mensal",
+    "history_available_after": "Histórico disponível após lançamentos",
+    "recent_txns": "Últimos lançamentos",
+    "view_all": "Ver todos →",
+    "no_txns_yet": "Nenhum lançamento ainda.",
+    "chart_aria": "Evolução do patrimônio"
+  },
+  "movimentos": {
+    "page_title": "Lançar — Patrimônio",
+    "heading": "Lançar movimento",
+    "from_account_label": "De (conta)",
+    "to_account_label": "Para (conta)",
+    "amount_label": "Valor (€)",
+    "until_label": "Até",
+    "needs_resolution_label": "Acompanhar até resolver"
+  },
+  "recorrentes": {
+    "page_title": "Recorrentes — Patrimônio",
+    "heading": "Regras recorrentes",
+    "pending_banner": "⏳ {count} regra(s) pendente(s) para {period}.",
+    "post_all_button": "Lançar todas",
+    "type_label": "Tipo",
+    "amount_label": "Valor (€)",
+    "day_label": "Dia",
+    "installments_label": "Parcelas",
+    "start_label": "Início",
+    "end_label": "Fim (opcional)",
+    "new_rule_button": "+ Nova regra recorrente",
+    "new_rule_modal_title": "Nova regra recorrente",
+    "category_filter_label": "Categorias:"
+  },
+  "contas": {
+    "page_title": "Contas — Patrimônio",
+    "heading": "Contas",
+    "code_placeholder": "ex: CC-BNP",
+    "opening_balance_label": "Saldo inicial",
+    "opening_date_label": "Data inicial"
+  },
+  "conta_detail": {
+    "page_title": "{code} — Patrimônio",
+    "current_balance": "Saldo atual",
+    "opening_balance": "Saldo inicial",
+    "statement": "Extrato",
+    "add_txn_button": "+ Movimento",
+    "add_txn_modal_title": "Adicionar movimento",
+    "tab_once": "Único",
+    "tab_recurring": "Recorrente",
+    "valuations_section": "Avaliação mensal",
+    "valuation_period_label": "Mês",
+    "valuation_balance_label": "Saldo (€)",
+    "no_valuations": "Nenhuma avaliação registrada.",
+    "contributed_label": "Total aportado",
+    "market_value_label": "Valor de mercado",
+    "unrealized_gain_label": "Ganho/perda não realizado",
+    "col_contributions": "Aportes",
+    "col_gain": "Ganho/perda",
+    "col_gain_pct": "Ganho/perda %",
+    "valuation_chart_aria": "Gráfico de evolução do saldo"
+  },
+  "acoes": {
+    "page_title": "Ações € — Patrimônio",
+    "heading": "Ações EUR",
+    "instrument_label": "Instrumento",
+    "operation_label": "Operação",
+    "qty_label": "Qtd.",
+    "price_label": "Preço (€)",
+    "cost_label": "Custos (€)"
+  },
+  "acoes_detail": {
+    "page_title": "{ticker} — Patrimônio",
+    "trades_section": "Operações",
+    "no_trades": "Nenhuma operação registrada.",
+    "col_realized": "Realizado"
+  },
+  "acoes_us": {
+    "page_title": "Ações US$ — Patrimônio",
+    "heading": "Ações USD (SOUN)",
+    "total_gross_usd": "Total bruto (USD)",
+    "total_net_usd": "Total líquido (USD)",
+    "withholding": "Retenção na fonte",
+    "total_net_eur": "Total líquido (EUR)",
+    "gross_label": "Bruto (USD)",
+    "net_label": "Líquido (USD)",
+    "fx_label": "Taxa EUR/USD",
+    "fx_placeholder": "ex: 1.08"
+  },
+  "divisao": {
+    "page_title": "Divisão — Patrimônio",
+    "heading": "Divisão do casal"
+  },
+  "split": {
+    "person_net_hint": "Rendimento líquido (líquido antes de impostos − IR), antes da divisão das despesas fixas.",
+    "pct_of_total": "{pct} do total",
+    "joint_income": "Rendimento conjunto",
+    "fixed_costs_month": "Despesas fixas (mês)",
+    "fixed_costs_hint": "Soma dos lançamentos já lançados este mês com a tag de despesas fixas configurada em Configurações.",
+    "pct_of_joint_income": "{pct} do rendimento conjunto",
+    "col_person": "Pessoa",
+    "col_gross": "Bruto",
+    "col_net_before_taxes": "Líquido antes de impostos",
+    "col_ir": "IR",
+    "col_net": "Líquido",
+    "col_contribution": "Contribuição",
+    "col_personal": "Pessoal",
+    "col_proportion": "Proporção"
+  },
+  "projecao": {
+    "page_title": "Projeção — Patrimônio",
+    "heading": "Projeção",
+    "next_months": "próximos {months} meses",
+    "months_12": "12 m",
+    "months_24": "24 m",
+    "months_36": "36 m",
+    "add_accounts_hint": "Adicione contas com saldos para ver a projeção.",
+    "imediato_at": "Imediato em {period}",
+    "diferido_at": "Diferido em {period}",
+    "alocado_at": "Alocado em {period}",
+    "total_at": "Total em {period}",
+    "projected_evolution": "Evolução projetada",
+    "monthly_detail": "Detalhe mensal",
+    "col_period": "Período",
+    "col_delta_month": "Δ mês",
+    "chart_aria": "Projeção do patrimônio",
+    "no_chart_data": "Sem dados para o gráfico."
+  },
+  "ir": {
+    "page_title": "IR — Patrimônio",
+    "heading": "Imposto de Renda",
+    "description": "Cálculo simplificado (tranche marginal, sem quotient familial). Rendimento tributável estimado a partir da média de 12 meses do líquido antes de impostos.",
+    "brackets_section": "Tranches",
+    "reset_defaults_button": "Repor valores 2024",
+    "from_eur": "De (€)",
+    "to_eur": "Até (€)",
+    "rate": "Taxa",
+    "no_brackets": "Sem tranches.",
+    "load_defaults_button": "Carregar padrões 2024",
+    "annual_ir_label": "IR anual — {name}",
+    "annual_ir_hint": "Imposto aplicando as tranches progressivas sobre o rendimento tributável (média de 12 meses do líquido antes de impostos, anualizada).",
+    "effective_rate": "{pct} efetiva",
+    "monthly_ir_label": "IR mensal — {name}",
+    "monthly_ir_hint": "IR anual ÷ 12.",
+    "delta_vs_declared": "Δ {amount} vs. taxa declarada",
+    "delta_equal": "Igual à taxa declarada",
+    "col_person": "Pessoa",
+    "col_gross_annual": "Bruto anual",
+    "col_deduction": "Dedução (estimativa)",
+    "col_taxable": "Rendimento tributável",
+    "col_annual_ir": "IR anual",
+    "col_monthly_calc": "IR mensal (calc.)",
+    "col_monthly_declared": "IR mensal (taxa declarada)",
+    "col_monthly_declared_hint": "Bruto/mês × taxa de retenção declarada em Configurações.",
+    "col_diff": "Diferença"
+  },
+  "configuracoes": {
+    "page_title": "Configurações — Patrimônio",
+    "heading": "Configurações",
+    "pfu_section": "PFU (taxa de ganho de capital)",
+    "pfu_label": "Taxa PFU (ex: 0.30)",
+    "current_value": "Valor atual:",
+    "fixed_expense_tag_section": "Tag de despesas fixas",
+    "fixed_expense_tag_label": "Tag que soma as despesas fixas do casal",
+    "no_tag_selected": "Nenhuma",
+    "people_section": "Pessoas",
+    "gross_label": "Bruto/mês (€)",
+    "net_before_taxes_label": "Líquido antes de impostos/mês (€)",
+    "net_before_taxes_avg_label": "Líquido antes de impostos (média 12m) (€)",
+    "ir_rate_label": "Taxa de retenção (%)",
+    "add_person_button": "Adicionar pessoa"
+  },
+  "cfg_salaries": {
+    "col_person": "Pessoa",
+    "col_gross": "Bruto/mês",
+    "col_net_before_taxes": "Líquido antes de impostos/mês",
+    "col_net_before_taxes_avg": "Líq. antes de impostos (média 12m)",
+    "col_net_before_taxes_avg_hint": "Média dos últimos 12 meses; usada para estimar o rendimento tributável na seção de IR.",
+    "col_ir": "IR/mês",
+    "col_net": "Líquido",
+    "no_people": "Nenhuma pessoa configurada."
+  },
+  "account_list": {
+    "no_accounts_registered": "Nenhuma conta cadastrada."
+  },
+  "account_statement": {
+    "col_in": "Entrada",
+    "col_out": "Saída",
+    "no_movements": "Sem movimentos."
+  },
+  "expenses": {
+    "hint": "Despesas derivadas das transações categorizadas aparecerão aqui."
+  },
+  "ledger": {
+    "pending_heading": "Pendentes",
+    "regular_heading": "Movimentos",
+    "no_pending": "Nenhum movimento pendente.",
+    "page_summary": "{total} lançamento(s) — página {page} de {total_pages}",
+    "prev_button": "← Anterior",
+    "next_button": "Próxima →"
+  },
+  "ops": {
+    "hint": "Histórico de operações aparecerá aqui."
+  },
+  "positions": {
+    "col_ticker": "Ticker",
+    "col_qty": "Qtd.",
+    "col_avg_cost": "PMC",
+    "col_current_price": "Preço atual",
+    "col_value": "Valor",
+    "col_pl": "+/−",
+    "no_positions": "Sem posições abertas."
+  },
+  "recurring_list": {
+    "col_progress": "Progresso",
+    "col_status": "Estado",
+    "continuous": "contínuo",
+    "remaining": "{count} restante(s)",
+    "status_pending": "pendente",
+    "status_ok": "ok",
+    "no_active_rules": "Nenhuma regra ativa.",
+    "no_finished_rules": "Nenhuma regra terminada.",
+    "active_section": "Ativos",
+    "finished_section": "Terminados",
+    "tab_list": "Lista",
+    "tab_by_account": "Por conta",
+    "rule_count": "{count} regra(s)",
+    "config_modal_title": "Configurações da regra",
+    "notes_label": "Nota",
+    "config_tooltip": "Notas e tags",
+    "tags_placeholder": "ex: casa, fixo",
+    "fixed_expense_marker_tooltip": "Conta para o total de despesas fixas do casal"
+  },
+  "usd_events": {
+    "col_gross_usd": "Bruto (USD)",
+    "col_net_usd": "Líquido (USD)",
+    "col_withholding": "Retenção",
+    "col_fx": "Taxa",
+    "col_net_eur": "Líquido (EUR)",
+    "no_events": "Sem eventos registrados."
+  },
+  "resolution": {
+    "pending_label": "Pendente",
+    "resolved_label": "Resolvido",
+    "modal_title": "Resolver lançamento",
+    "pair_label": "Lançamento correspondente",
+    "pair_placeholder": "Buscar lançamento...",
+    "pair_no_results": "Nenhum lançamento encontrado.",
+    "note_label": "Nota de resolução",
+    "resolve_button": "Resolver",
+    "unresolve_button": "Desfazer resolução",
+    "error_required": "Informe o lançamento correspondente ou uma nota",
+    "flag_tooltip": "Marcar para acompanhar"
+  },
+  "txn_notes": {
+    "badge_tooltip": "Notas",
+    "modal_title": "Notas",
+    "empty": "Nenhuma nota ainda.",
+    "add_label": "Nova nota",
+    "add_placeholder": "Escreva uma nota...",
+    "add_button": "Adicionar nota",
+    "delete_confirm": "Remover esta nota?"
+  }
+}

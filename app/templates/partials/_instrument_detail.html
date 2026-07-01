@@ -1,0 +1,76 @@
+<div id="instrument-detail">
+  {% if position %}
+  <div class="kpi-grid" style="margin-bottom:1.5rem">
+    <div class="kpi-card">
+      <div class="kpi-card__label">{{ t('positions.col_qty') }}</div>
+      <div class="kpi-card__value">{{ position.qty }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card__label">{{ t('positions.col_avg_cost') }}</div>
+      <div class="kpi-card__value">{{ position.avg_cost_cents | eur }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card__label">{{ t('positions.col_current_price') }}</div>
+      <div class="kpi-card__value">{{ position.current_price_cents | eur }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card__label">{{ t('positions.col_pl') }}</div>
+      <div class="kpi-card__value {% if position.unrealized_cents >= 0 %}pos{% else %}neg{% endif %}">
+        {{ position.unrealized_cents | eur }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="section-header">
+    <span class="section-title">{{ t('acoes_detail.trades_section') }}</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ t('common.table.date') }}</th>
+          <th>{{ t('common.table.type') }}</th>
+          <th class="num">{{ t('acoes.qty_label') }}</th>
+          <th class="num">{{ t('acoes.price_label') }}</th>
+          <th class="num">{{ t('acoes.cost_label') }}</th>
+          <th class="num">{{ t('acoes_detail.col_realized') }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for trade in trades %}
+        <tr>
+          <td>{{ trade.date }}</td>
+          <td>{{ t('trade_kind.' ~ trade.kind) }}</td>
+          <td class="num">{{ trade.qty }}</td>
+          <td class="num">{{ trade.price_cents | eur }}</td>
+          <td class="num">{{ trade.order_cost_cents | eur }}</td>
+          <td class="num {% if trade.realized_cents and trade.realized_cents >= 0 %}pos{% elif trade.realized_cents %}neg{% endif %}">
+            {% if trade.realized_cents is not none %}{{ trade.realized_cents | eur }}{% else %}—{% endif %}
+          </td>
+          <td>
+            <button
+              type="button"
+              class="btn btn--ghost"
+              style="color:var(--neg)"
+              title="{{ t('common.remove_txn') }}"
+              aria-label="{{ t('common.remove_txn') }}"
+              hx-delete="/acoes/{{ instrument.ticker }}/trades/{{ trade.id }}"
+              hx-target="#instrument-detail"
+              hx-swap="outerHTML"
+              hx-confirm="{{ t('common.confirm_remove_txn') }}"
+            >🗑</button>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" style="color:var(--ink-muted);text-align:center;padding:2rem">
+            {{ t('acoes_detail.no_trades') }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

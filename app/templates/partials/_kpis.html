@@ -1,0 +1,18 @@
+<div class="kpi-grid">
+  <div class="kpi-card kpi-card--imediato">
+    <div class="kpi-card__label" title="{{ t('tier.imediato_hint') }}">{{ t('tier.imediato') }}</div>
+    <div class="kpi-card__value">{{ tier_totals.get("Imediato", 0) | eur }}</div>
+  </div>
+  <div class="kpi-card kpi-card--diferido">
+    <div class="kpi-card__label" title="{{ t('tier.diferido_hint') }}">{{ t('tier.diferido') }}</div>
+    <div class="kpi-card__value">{{ tier_totals.get("Diferido", 0) | eur }}</div>
+  </div>
+  <div class="kpi-card kpi-card--alocado">
+    <div class="kpi-card__label" title="{{ t('tier.alocado_hint') }}">{{ t('tier.alocado') }}</div>
+    <div class="kpi-card__value">{{ tier_totals.get("Alocado", 0) | eur }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-card__label">{{ t('kpis.total') }}</div>
+    <div class="kpi-card__value">{{ grand_total | eur }}</div>
+  </div>
+</div>

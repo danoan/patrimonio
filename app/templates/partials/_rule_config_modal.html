@@ -1,0 +1,23 @@
+<dialog id="config-modal" class="modal">
+  <div class="modal__panel">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ t('recurring_list.config_modal_title') }}</h2>
+      <button type="button" class="modal__close" data-modal-close aria-label="{{ t('common.close') }}">&times;</button>
+    </div>
+    <form hx-post="{{ config_url }}" hx-target="#recurring-list" hx-swap="outerHTML" data-modal-form class="modal__body">
+      <p style="color:var(--ink-muted);font-size:0.875rem;margin-bottom:1rem">{{ rule.description }}</p>
+      <div class="field">
+        <label for="rn-notes">{{ t('recurring_list.notes_label') }}</label>
+        <textarea id="rn-notes" name="notes" rows="5">{{ rule.notes or "" }}</textarea>
+      </div>
+      <div class="field" style="margin-top:0.75rem">
+        <label for="rn-tags">{{ t('common.table.tags') }}</label>
+        <input id="rn-tags" type="text" name="tags" value="{{ rule.tags or '' }}" placeholder="{{ t('recurring_list.tags_placeholder') }}">
+      </div>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--secondary" data-modal-close>{{ t('common.actions.cancel') }}</button>
+        <button type="submit" class="btn btn--primary">{{ t('common.actions.save') }}</button>
+      </div>
+    </form>
+  </div>
+</dialog>

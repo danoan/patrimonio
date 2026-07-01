@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ t('overview.page_title') }}{% endblock %}
+{% block content %}
+<h1 class="page-title">{{ t('overview.heading') }}</h1>
+
+<div id="kpis" hx-get="/partials/kpis" hx-trigger="revealed">
+  {% include "partials/_kpis.html" %}
+</div>
+
+<div class="chart-wrap">
+  <div class="section-header">
+    <span class="section-title">{{ t('overview.monthly_evolution') }}</span>
+  </div>
+  {% include "partials/_networth_chart.html" %}
+</div>
+
+<div class="section-header">
+  <span class="section-title">{{ t('overview.recent_txns') }}</span>
+  <a href="/movimentos" class="btn btn--ghost">{{ t('overview.view_all') }}</a>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('common.table.date') }}</th>
+        <th>{{ t('common.table.description') }}</th>
+        <th>{{ t('common.table.category') }}</th>
+        <th class="num">{{ t('common.table.amount') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for txn in recent_txns %}
+      <tr>
+        <td>{{ txn.date }}</td>
+        <td>{{ txn.comment or "—" }}</td>
+        <td>{{ txn.category or "—" }}</td>
+        <td class="num">{{ txn.amount_cents | eur }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" style="color:var(--ink-muted);text-align:center;padding:2rem">{{ t('overview.no_txns_yet') }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

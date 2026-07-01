@@ -1,0 +1,45 @@
+{% from "partials/_notes_badge.html" import notes_badge with context %}
+<dialog id="notes-modal" class="modal">
+  <div class="modal__panel">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ t('txn_notes.modal_title') }}</h2>
+      <button type="button" class="modal__close" data-modal-close aria-label="{{ t('common.close') }}">&times;</button>
+    </div>
+    <div class="modal__body">
+      <ul class="notes-list">
+        {% for note in notes %}
+        <li class="notes-list__item">
+          <div class="notes-list__meta">
+            <span style="color:var(--ink-muted);font-size:0.75rem">{{ note.created_at[:10] }}</span>
+            <button
+              type="button"
+              class="btn btn--ghost"
+              style="color:var(--neg)"
+              title="{{ t('common.remove_txn') }}"
+              aria-label="{{ t('common.remove_txn') }}"
+              hx-delete="/movimentos/{{ txn_id }}/notes/{{ note.id }}{{ qs }}"
+              hx-target="#notes-modal-container"
+              hx-swap="innerHTML"
+              hx-confirm="{{ t('txn_notes.delete_confirm') }}"
+            >🗑</button>
+          </div>
+          <p style="margin:0.25rem 0 0;white-space:pre-wrap">{{ note.text }}</p>
+        </li>
+        {% else %}
+        <li style="color:var(--ink-muted);text-align:center;padding:1rem 0">{{ t('txn_notes.empty') }}</li>
+        {% endfor %}
+      </ul>
+      <form hx-post="/movimentos/{{ txn_id }}/notes{{ qs }}" hx-target="#notes-modal-container" hx-swap="innerHTML" class="form-row" style="margin-top:1rem;align-items:flex-end">
+        <div class="field" style="flex:1">
+          <label for="tn-text">{{ t('txn_notes.add_label') }}</label>
+          <textarea id="tn-text" name="text" rows="2" placeholder="{{ t('txn_notes.add_placeholder') }}" required></textarea>
+        </div>
+        <div class="field" style="justify-content:flex-end">
+          <button type="submit" class="btn btn--primary">{{ t('txn_notes.add_button') }}</button>
+        </div>
+      </form>
+      {% if error %}<div class="editable-error">{{ error }}</div>{% endif %}
+    </div>
+  </div>
+</dialog>
+{{ notes_badge(txn_id, notes|length, "/movimentos/" ~ txn_id ~ "/notes" ~ qs, oob=True) }}

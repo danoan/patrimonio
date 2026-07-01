@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ t('movimentos.page_title') }}{% endblock %}
+{% block content %}
+<h1 class="page-title">{{ t('movimentos.heading') }}</h1>
+
+<form hx-post="/movimentos" hx-target="#ledger" hx-swap="outerHTML" class="form-row">
+  <div class="field">
+    <label for="m-date">{{ t('common.table.date') }}</label>
+    <input id="m-date" type="date" name="date" required>
+  </div>
+  <div class="field">
+    <label for="m-from">{{ t('movimentos.from_account_label') }}</label>
+    <select id="m-from" name="from_account">
+      <option value="">{{ t('common.placeholder.external') }}</option>
+      {% for a in account_list %}
+      <option value="{{ a.id }}">{{ a.code }} — {{ a.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="m-to">{{ t('movimentos.to_account_label') }}</label>
+    <select id="m-to" name="to_account">
+      <option value="">{{ t('common.placeholder.external') }}</option>
+      {% for a in account_list %}
+      <option value="{{ a.id }}">{{ a.code }} — {{ a.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="m-amount">{{ t('movimentos.amount_label') }}</label>
+    <input id="m-amount" type="text" name="amount_str" class="num-input" placeholder="0,00" required>
+  </div>
+  <div class="field">
+    <label for="m-cat">{{ t('common.table.category') }}</label>
+    <input id="m-cat" type="text" name="category" placeholder="{{ t('common.placeholder.optional') }}">
+  </div>
+  <div class="field" style="flex:1;min-width:200px">
+    <label for="m-comment">{{ t('common.table.description') }}</label>
+    <input id="m-comment" type="text" name="comment" placeholder="{{ t('common.placeholder.optional') }}">
+  </div>
+  <div class="field">
+    <label for="m-tags">{{ t('common.table.tags') }}</label>
+    <input id="m-tags" type="text" name="tags" placeholder="{{ t('common.placeholder.optional') }}">
+  </div>
+  <div class="field" style="justify-content:flex-end">
+    <label for="m-needs-resolution" style="display:flex;align-items:center;gap:0.35rem;font-size:0.8rem;color:var(--ink-muted);font-weight:normal">
+      <input id="m-needs-resolution" type="checkbox" name="needs_resolution">
+      {{ t('movimentos.needs_resolution_label') }}
+    </label>
+  </div>
+  <div class="field" style="justify-content:flex-end">
+    <button type="submit" class="btn btn--primary">{{ t('common.actions.post') }}</button>
+  </div>
+</form>
+
+<form hx-get="/movimentos" hx-target="#ledger" hx-swap="outerHTML" hx-push-url="true" class="form-row" style="margin:1.5rem 0">
+  <div class="field">
+    <label for="f-from">{{ t('common.table.from') }}</label>
+    <input id="f-from" type="date" name="date_from" value="{{ date_from or '' }}">
+  </div>
+  <div class="field">
+    <label for="f-to">{{ t('movimentos.until_label') }}</label>
+    <input id="f-to" type="date" name="date_to" value="{{ date_to or '' }}">
+  </div>
+  <div class="field" style="justify-content:flex-end">
+    <button type="submit" class="btn btn--secondary">{{ t('common.actions.filter') }}</button>
+  </div>
+  {% if date_from or date_to %}
+  <div class="field" style="justify-content:flex-end">
+    <a href="/movimentos" class="btn btn--ghost">{{ t('common.actions.clear') }}</a>
+  </div>
+  {% endif %}
+</form>
+
+<div id="ledger">
+  {% include "partials/_ledger.html" %}
+</div>
+<div id="resolve-modal-container"></div>
+<div id="notes-modal-container"></div>
+{% endblock %}

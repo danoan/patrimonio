@@ -1,0 +1,38 @@
+{% from "partials/_editable_cell.html" import editable_cell %}
+{% macro event_edit_url(event_id, field) -%}
+/acoes-us/events/{{ event_id }}/field/{{ field }}/edit
+{%- endmacro %}
+<div id="usd-events" class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('common.table.date') }}</th>
+        <th>{{ t('common.table.type') }}</th>
+        <th class="num">{{ t('usd_events.col_gross_usd') }}</th>
+        <th class="num">{{ t('usd_events.col_net_usd') }}</th>
+        <th class="num">{{ t('usd_events.col_withholding') }}</th>
+        <th class="num">{{ t('usd_events.col_fx') }}</th>
+        <th class="num">{{ t('usd_events.col_net_eur') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ev in events %}
+      <tr>
+        {{ editable_cell(event_edit_url(ev.id, "date"), ev.date) }}
+        {{ editable_cell(event_edit_url(ev.id, "kind"), t('usd_kind.vesting') if ev.kind == "vesting" else t('usd_kind.sale')) }}
+        {{ editable_cell(event_edit_url(ev.id, "gross_usd_cents"), ev.gross_usd_cents | usd, "num") }}
+        {{ editable_cell(event_edit_url(ev.id, "net_usd_cents"), ev.net_usd_cents | usd, "num") }}
+        <td class="num neg">{{ (ev.gross_usd_cents - ev.net_usd_cents) | usd }}</td>
+        {{ editable_cell(event_edit_url(ev.id, "fx_eur_per_usd"), ev.fx_eur_per_usd, "num") }}
+        <td class="num pos">{{ (ev.net_usd_cents * ev.fx_eur_per_usd) | int | eur }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="color:var(--ink-muted);text-align:center;padding:2rem">
+          {{ t('usd_events.no_events') }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

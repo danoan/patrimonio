@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ t('acoes.page_title') }}{% endblock %}
+{% block content %}
+<h1 class="page-title">{{ t('acoes.heading') }}</h1>
+
+<form hx-post="/acoes/trades" hx-target="#positions" hx-swap="outerHTML" class="form-row" style="margin-bottom:1.5rem">
+  <div class="field">
+    <label for="t-inst">{{ t('acoes.instrument_label') }}</label>
+    <select id="t-inst" name="instrument_id" required>
+      {% for inst in instruments %}
+      <option value="{{ inst.id }}">{{ inst.ticker }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="t-kind">{{ t('acoes.operation_label') }}</label>
+    <select id="t-kind" name="kind">
+      <option value="buy">{{ t('trade_kind.buy') }}</option>
+      <option value="sell">{{ t('trade_kind.sell') }}</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="t-date">{{ t('common.table.date') }}</label>
+    <input id="t-date" type="date" name="date" required>
+  </div>
+  <div class="field">
+    <label for="t-qty">{{ t('acoes.qty_label') }}</label>
+    <input id="t-qty" type="number" name="qty" min="1" required style="width:80px">
+  </div>
+  <div class="field">
+    <label for="t-price">{{ t('acoes.price_label') }}</label>
+    <input id="t-price" type="text" name="price_str" class="num-input" placeholder="0,00" required>
+  </div>
+  <div class="field">
+    <label for="t-cost">{{ t('acoes.cost_label') }}</label>
+    <input id="t-cost" type="text" name="order_cost_str" class="num-input" value="0,00">
+  </div>
+  <div class="field" style="justify-content:flex-end">
+    <button type="submit" class="btn btn--primary">{{ t('common.actions.register') }}</button>
+  </div>
+</form>
+
+<div id="positions">
+  {% include "partials/_positions.html" %}
+</div>
+{% endblock %}

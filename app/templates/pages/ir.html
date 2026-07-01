@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ t('ir.page_title') }}{% endblock %}
+{% block content %}
+<h1 class="page-title">{{ t('ir.heading') }}</h1>
+<p style="color:var(--ink-muted);font-size:0.875rem;margin-bottom:1.5rem">
+  {{ t('ir.description') }}
+</p>
+
+<div id="ir-results">
+  {% include "partials/_ir_results.html" %}
+</div>
+
+<div style="margin-top:2rem">
+  <div class="section-header">
+    <span class="section-title">{{ t('ir.brackets_section') }}</span>
+    <form hx-post="/ir/brackets/reset" hx-target="#ir-results" hx-swap="outerHTML">
+      <button type="submit" class="btn btn--secondary" style="font-size:0.8rem">
+        {{ t('ir.reset_defaults_button') }}
+      </button>
+    </form>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ t('ir.from_eur') }}</th>
+          <th>{{ t('ir.to_eur') }}</th>
+          <th class="num">{{ t('ir.rate') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in brackets %}
+        <tr>
+          <td class="num">{{ (b.lower_cents / 100) | int }} €</td>
+          <td class="num">{% if b.upper_cents >= 999_999_999 %}∞{% else %}{{ (b.upper_cents / 100) | int }} €{% endif %}</td>
+          <td class="num">{{ (b.rate * 100) | round(0) | int }} %</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3" style="color:var(--ink-muted);text-align:center;padding:1.5rem">
+            {{ t('ir.no_brackets') }} <button class="btn btn--ghost" hx-post="/ir/brackets/reset"
+              hx-target="#ir-results" hx-swap="outerHTML">{{ t('ir.load_defaults_button') }}</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

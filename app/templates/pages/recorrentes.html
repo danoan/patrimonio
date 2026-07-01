@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}{{ t('recorrentes.page_title') }}{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap">
+  <h1 class="page-title" style="margin:0">{{ t('recorrentes.heading') }}</h1>
+  <button type="button" class="btn btn--primary" data-modal-open="new-rule-modal">{{ t('recorrentes.new_rule_button') }}</button>
+</div>
+
+{% if categories %}
+<div class="chip-bar" data-category-filter-bar>
+  <span class="chip-bar__label">{{ t('recorrentes.category_filter_label') }}</span>
+  {% for cat in categories %}
+  <button type="button" class="chip" data-category-chip="{{ cat }}">{{ cat }}</button>
+  {% endfor %}
+</div>
+{% endif %}
+
+<dialog id="new-rule-modal" class="modal" {% if preselect_to_account %}open{% endif %}>
+  <div class="modal__panel">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ t('recorrentes.new_rule_modal_title') }}</h2>
+      <button type="button" class="modal__close" data-modal-close aria-label="{{ t('common.close') }}">&times;</button>
+    </div>
+    <form hx-post="/recorrentes" hx-target="#recurring-list" hx-swap="outerHTML" data-modal-form class="modal__body">
+      <div class="field-grid">
+        <div class="field">
+          <label for="r-kind">{{ t('recorrentes.type_label') }}</label>
+          <select id="r-kind" name="kind">
+            <option value="fixed">{{ t('recurring_kind.fixed') }}</option>
+            <option value="installment">{{ t('recurring_kind.installment') }}</option>
+          </select>
+        </div>
+        <div class="field field--span2">
+          <label for="r-desc">{{ t('common.table.description') }}</label>
+          <input id="r-desc" type="text" name="description" required>
+        </div>
+        <div class="field">
+          <label for="r-category">{{ t('common.table.category') }}</label>
+          <input id="r-category" type="text" name="category" placeholder="{{ t('common.placeholder.optional') }}">
+        </div>
+        <div class="field">
+          <label for="r-from">{{ t('common.table.from') }}</label>
+          <select id="r-from" name="from_account">
+            <option value="">{{ t('common.placeholder.external') }}</option>
+            {% for a in account_list %}<option value="{{ a.id }}">{{ a.code }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="r-to">{{ t('common.table.to') }}</label>
+          <select id="r-to" name="to_account">
+            <option value="">{{ t('common.placeholder.external') }}</option>
+            {% for a in account_list %}
+            <option value="{{ a.id }}" {% if preselect_to_account and a.id == preselect_to_account %}selected{% endif %}>{{ a.code }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="r-amount">{{ t('recorrentes.amount_label') }}</label>
+          <input id="r-amount" type="text" name="amount_str" class="num-input" placeholder="0,00" required>
+        </div>
+        <div class="field">
+          <label for="r-day">{{ t('recorrentes.day_label') }}</label>
+          <input id="r-day" type="number" name="day_of_month" value="1" min="1" max="28">
+        </div>
+        <div class="field">
+          <label for="r-installments">{{ t('recorrentes.installments_label') }}</label>
+          <input id="r-installments" type="number" name="installments" placeholder="—" min="1">
+        </div>
+        <div class="field">
+          <label for="r-start">{{ t('recorrentes.start_label') }}</label>
+          <input id="r-start" type="month" name="start_period">
+        </div>
+        <div class="field">
+          <label for="r-end">{{ t('recorrentes.end_label') }}</label>
+          <input id="r-end" type="month" name="end_period">
+        </div>
+        <div class="field field--span2">
+          <label for="r-notes">{{ t('recurring_list.notes_label') }}</label>
+          <textarea id="r-notes" name="notes" rows="3" placeholder="{{ t('common.placeholder.optional') }}"></textarea>
+        </div>
+        <div class="field field--span2">
+          <label for="r-tags">{{ t('common.table.tags') }}</label>
+          <input id="r-tags" type="text" name="tags" placeholder="{{ t('recurring_list.tags_placeholder') }}">
+        </div>
+      </div>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--secondary" data-modal-close>{{ t('common.actions.cancel') }}</button>
+        <button type="submit" class="btn btn--primary">{{ t('common.actions.add') }}</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<div data-tab-group class="tab-bar">
+  <button type="button" class="tab-btn active" data-tab="list">{{ t('recurring_list.tab_list') }}</button>
+  <button type="button" class="tab-btn" data-tab="by-account">{{ t('recurring_list.tab_by_account') }}</button>
+</div>
+
+{% include "partials/_recurring_list.html" %}
+<div id="config-modal-container"></div>
+{% endblock %}

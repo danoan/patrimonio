@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ t('configuracoes.page_title') }}{% endblock %}
+{% block content %}
+<h1 class="page-title">{{ t('configuracoes.heading') }}</h1>
+
+<section style="margin-bottom:2rem">
+  <div class="section-header"><span class="section-title">{{ t('configuracoes.pfu_section') }}</span></div>
+  <form hx-post="/config/pfu" hx-target="#pfu-val" hx-swap="outerHTML" class="form-row">
+    <div class="field">
+      <label for="cfg-pfu">{{ t('configuracoes.pfu_label') }}</label>
+      <input id="cfg-pfu" type="text" name="pfu" value="{{ pfu }}" style="width:100px">
+    </div>
+    <div class="field" style="justify-content:flex-end">
+      <button type="submit" class="btn btn--secondary">{{ t('common.actions.save') }}</button>
+    </div>
+  </form>
+  <span>{{ t('configuracoes.current_value') }} <span id="pfu-val">{{ pfu }}</span></span>
+</section>
+
+<section style="margin-bottom:2rem">
+  <div class="section-header"><span class="section-title">{{ t('configuracoes.fixed_expense_tag_section') }}</span></div>
+  <form hx-post="/config/fixed-expense-tag" hx-target="#fixed-expense-tag-val" hx-swap="outerHTML" class="form-row">
+    <div class="field">
+      <label for="cfg-fixed-tag">{{ t('configuracoes.fixed_expense_tag_label') }}</label>
+      <select id="cfg-fixed-tag" name="tag" style="min-width:160px">
+        <option value="">{{ t('configuracoes.no_tag_selected') }}</option>
+        {% for tag in available_tags %}
+        <option value="{{ tag }}" {% if tag == fixed_expense_tag %}selected{% endif %}>{{ tag }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field" style="justify-content:flex-end">
+      <button type="submit" class="btn btn--secondary">{{ t('common.actions.save') }}</button>
+    </div>
+  </form>
+  <span>{{ t('configuracoes.current_value') }} <span id="fixed-expense-tag-val">{{ fixed_expense_tag or t('configuracoes.no_tag_selected') }}</span></span>
+</section>
+
+<section style="margin-bottom:2rem">
+  <div class="section-header"><span class="section-title">{{ t('configuracoes.people_section') }}</span></div>
+
+  <div id="salaries">
+    {% include "partials/_cfg_salaries.html" %}
+  </div>
+
+  <form hx-post="/config/pessoas" hx-target="#salaries" hx-swap="outerHTML" class="form-row" style="margin-top:1rem">
+    <div class="field">
+      <label>{{ t('common.table.name') }}</label>
+      <input type="text" name="name" required>
+    </div>
+    <div class="field">
+      <label>{{ t('configuracoes.gross_label') }}</label>
+      <input type="text" name="gross_str" class="num-input" placeholder="0,00" required>
+    </div>
+    <div class="field">
+      <label>{{ t('configuracoes.net_before_taxes_label') }}</label>
+      <input type="text" name="net_before_taxes_str" class="num-input" placeholder="0,00" required>
+    </div>
+    <div class="field">
+      <label>{{ t('configuracoes.net_before_taxes_avg_label') }}</label>
+      <input type="text" name="net_before_taxes_avg_str" class="num-input" placeholder="0,00" required>
+    </div>
+    <div class="field">
+      <label>{{ t('configuracoes.ir_rate_label') }}</label>
+      <input type="text" name="ir_str" class="num-input" placeholder="0,00" required>
+    </div>
+    <div class="field" style="justify-content:flex-end">
+      <button type="submit" class="btn btn--primary">{{ t('configuracoes.add_person_button') }}</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

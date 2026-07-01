@@ -1,0 +1,82 @@
+{% from "partials/_editable_cell.html" import editable_cell %}
+{% from "partials/_resolution_cell.html" import resolution_cell with context %}
+{% from "partials/_notes_badge.html" import notes_badge with context %}
+{% macro txn_edit_url(txn_id, field) -%}
+/movimentos/{{ txn_id }}/field/{{ field }}/edit?view=statement&account_id={{ account_id }}
+{%- endmacro %}
+{% macro toggle_url(txn_id, needs_resolution) -%}
+/movimentos/{{ txn_id }}/needs-resolution?needs_resolution={{ needs_resolution }}&view=statement&account_id={{ account_id }}
+{%- endmacro %}
+{% macro resolve_edit_url(txn_id) -%}
+/movimentos/{{ txn_id }}/resolve/edit?view=statement&account_id={{ account_id }}
+{%- endmacro %}
+{% macro notes_open_url(txn_id) -%}
+/movimentos/{{ txn_id }}/notes?view=statement&account_id={{ account_id }}
+{%- endmacro %}
+{% if oob_balance %}
+<div id="current-balance-value" hx-swap-oob="true" class="kpi-card__value {% if current_balance >= 0 %}pos{% else %}neg{% endif %}">
+  {{ current_balance | eur }}
+</div>
+{% endif %}
+<div id="account-statement" class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('common.table.date') }}</th>
+        <th>{{ t('common.table.description') }}</th>
+        <th>{{ t('common.table.category') }}</th>
+        <th>{{ t('common.table.tags') }}</th>
+        <th class="num">{{ t('account_statement.col_in') }}</th>
+        <th class="num">{{ t('account_statement.col_out') }}</th>
+        <th class="num">{{ t('common.table.balance') }}</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in statement %}
+      <tr>
+        {{ editable_cell(txn_edit_url(row.txn.id, "date"), row.txn.date) }}
+        {{ editable_cell(txn_edit_url(row.txn.id, "comment"), row.txn.comment or "—") }}
+        {{ editable_cell(txn_edit_url(row.txn.id, "category"), row.txn.category or "—") }}
+        {{ editable_cell(txn_edit_url(row.txn.id, "tags"), row.txn.tags or "—") }}
+        {% if row.direction == "in" %}
+        {{ editable_cell(txn_edit_url(row.txn.id, "amount_cents"), row.txn.amount_cents | eur, "num pos") }}
+        {% else %}
+        <td class="num pos"></td>
+        {% endif %}
+        {% if row.direction == "out" %}
+        {{ editable_cell(txn_edit_url(row.txn.id, "amount_cents"), row.txn.amount_cents | eur, "num neg") }}
+        {% else %}
+        <td class="num neg"></td>
+        {% endif %}
+        <td class="num {% if row.running_balance >= 0 %}pos{% else %}neg{% endif %}">
+          {{ row.running_balance | eur }}
+        </td>
+        {{ resolution_cell(row.txn, toggle_url(row.txn.id, "false" if row.txn.needs_resolution else "true"), resolve_edit_url(row.txn.id), "#account-statement") }}
+        <td>{{ notes_badge(row.txn.id, note_counts.get(row.txn.id, 0), notes_open_url(row.txn.id)) }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn--ghost"
+            style="color:var(--neg)"
+            title="{{ t('common.remove_txn') }}"
+            aria-label="{{ t('common.remove_txn') }}"
+            hx-delete="/contas/{{ account_id }}/lancamentos/{{ row.txn.id }}"
+            hx-target="#account-statement"
+            hx-swap="outerHTML"
+            hx-confirm="{{ t('common.confirm_remove_txn') }}"
+          >🗑</button>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="10" style="color:var(--ink-muted);text-align:center;padding:2rem">
+          {{ t('account_statement.no_movements') }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,35 @@
+{% from "partials/_editable_cell.html" import editable_cell %}
+<div id="positions" class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('positions.col_ticker') }}</th>
+        <th class="num">{{ t('positions.col_qty') }}</th>
+        <th class="num">{{ t('positions.col_avg_cost') }}</th>
+        <th class="num">{{ t('positions.col_current_price') }}</th>
+        <th class="num">{{ t('positions.col_value') }}</th>
+        <th class="num">{{ t('positions.col_pl') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pos in positions %}
+      <tr>
+        <td><a href="/acoes/{{ pos.instrument.ticker }}">{{ pos.instrument.ticker }}</a></td>
+        <td class="num">{{ pos.qty }}</td>
+        <td class="num">{{ pos.avg_cost_cents | eur }}</td>
+        {{ editable_cell("/acoes/instruments/" ~ pos.instrument.id ~ "/price/edit", pos.current_price_cents | eur, "num") }}
+        <td class="num">{{ (pos.current_price_cents * pos.qty) | eur }}</td>
+        <td class="num {% if pos.unrealized_cents >= 0 %}pos{% else %}neg{% endif %}">
+          {{ pos.unrealized_cents | eur }}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="color:var(--ink-muted);text-align:center;padding:2rem">
+          {{ t('positions.no_positions') }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

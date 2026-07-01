@@ -1,0 +1,57 @@
+{% if not split.people %}
+<p style="color:var(--ink-muted)">{{ t('common.configure_people_first') | safe }}</p>
+{% else %}
+<div class="kpi-grid">
+  {% for ps in split.people %}
+  <div class="kpi-card">
+    <div class="kpi-card__label" title="{{ t('split.person_net_hint') }}">{{ ps.person.name }}</div>
+    <div class="kpi-card__value">{{ ps.net_income_cents | eur }}</div>
+    <div style="font-size:0.75rem;color:var(--ink-muted);margin-top:0.35rem">
+      {{ t('split.pct_of_total', pct=(ps.proportion | pct)) }}
+    </div>
+  </div>
+  {% endfor %}
+  <div class="kpi-card">
+    <div class="kpi-card__label">{{ t('split.joint_income') }}</div>
+    <div class="kpi-card__value">{{ split.total_net_income_cents | eur }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-card__label" title="{{ t('split.fixed_costs_hint') }}">{{ t('split.fixed_costs_month') }}</div>
+    <div class="kpi-card__value neg">{{ split.total_fixed_cents | eur }}</div>
+    <div style="font-size:0.75rem;color:var(--ink-muted);margin-top:0.35rem">
+      {{ t('split.pct_of_joint_income', pct=(split.contribution_rate | pct)) }}
+    </div>
+  </div>
+</div>
+
+<div class="table-wrap" style="margin-top:1.5rem">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('split.col_person') }}</th>
+        <th class="num">{{ t('split.col_gross') }}</th>
+        <th class="num">{{ t('split.col_net_before_taxes') }}</th>
+        <th class="num">{{ t('split.col_ir') }}</th>
+        <th class="num">{{ t('split.col_net') }}</th>
+        <th class="num">{{ t('split.col_contribution') }}</th>
+        <th class="num">{{ t('split.col_personal') }}</th>
+        <th class="num">{{ t('split.col_proportion') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ps in split.people %}
+      <tr>
+        <td>{{ ps.person.name }}</td>
+        <td class="num">{{ ps.person.gross_cents | eur }}</td>
+        <td class="num">{{ ps.person.net_before_taxes_cents | eur }}</td>
+        <td class="num neg">{{ ps.person.ir_rate | pct }} ({{ ps.ir_cents | eur }})</td>
+        <td class="num pos">{{ ps.net_income_cents | eur }}</td>
+        <td class="num neg">{{ ps.contribution_cents | eur }}</td>
+        <td class="num pos">{{ ps.personal_cents | eur }}</td>
+        <td class="num">{{ ps.proportion | pct }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}

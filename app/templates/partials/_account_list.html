@@ -1,0 +1,53 @@
+{% from "partials/_editable_cell.html" import editable_cell %}
+{% macro account_edit_url(account_id, field) -%}
+/contas/{{ account_id }}/field/{{ field }}/edit
+{%- endmacro %}
+{% macro tier_badge(tier) -%}
+<span class="tier tier--{{ tier }}">{{ t('tier.' ~ tier|lower) if tier else "" }}</span>
+{%- endmacro %}
+{% macro account_table(accounts_for_type, balances) %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('common.table.code') }}</th>
+        <th>{{ t('common.table.name') }}</th>
+        <th>{{ t('common.table.tier') }}</th>
+        <th>{{ t('common.table.type') }}</th>
+        <th>{{ t('common.table.currency') }}</th>
+        <th class="num">{{ t('common.table.balance') }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for account in accounts_for_type %}
+      <tr>
+        <td><a href="/contas/{{ account.code }}">{{ account.code }}</a></td>
+        {{ editable_cell(account_edit_url(account.id, "name"), account.name) }}
+        {{ editable_cell(account_edit_url(account.id, "tier"), tier_badge(account.tier), safe=True) }}
+        {{ editable_cell(account_edit_url(account.id, "account_type"), t('account_type.' ~ account.account_type)) }}
+        {{ editable_cell(account_edit_url(account.id, "currency"), account.currency) }}
+        <td class="num {% if balances[account.id] >= 0 %}pos{% else %}neg{% endif %}">
+          {{ balances[account.id] | eur }}
+        </td>
+        <td></td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="color:var(--ink-muted);text-align:center;padding:2rem">
+          {{ t('account_list.no_accounts_registered') }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endmacro %}
+<div id="account-list">
+  {% for account_type in ("checking", "savings", "variable") %}
+  <div class="section-header" style="margin-top:1.5rem">
+    <span class="section-title">{{ t('account_type.' ~ account_type) }}</span>
+  </div>
+  {{ account_table(account_list | selectattr("account_type", "equalto", account_type) | list, balances) }}
+  {% endfor %}
+</div>

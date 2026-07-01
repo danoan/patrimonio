@@ -1,0 +1,351 @@
+{
+  "common": {
+    "app_title": "Patrimônio",
+    "app_name": "patrimônio",
+    "nav_aria": "Main navigation",
+    "table": {
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "amount": "Amount",
+      "code": "Code",
+      "name": "Name",
+      "tier": "Tier",
+      "currency": "Currency",
+      "balance": "Balance",
+      "from": "From",
+      "to": "To",
+      "type": "Type",
+      "tags": "Tags"
+    },
+    "actions": {
+      "add": "Add",
+      "save": "Save",
+      "register": "Register",
+      "filter": "Filter",
+      "clear": "Clear",
+      "cancel": "Cancel",
+      "post": "Post",
+      "skip": "Skip"
+    },
+    "placeholder": {
+      "optional": "optional",
+      "external": "— external —"
+    },
+    "close": "Close",
+    "remove_txn": "Remove entry",
+    "confirm_remove_txn": "Remove this entry?",
+    "remove_rule": "Remove rule",
+    "remove_valuation": "Remove valuation",
+    "confirm_remove_valuation": "Remove this valuation?",
+    "configure_people_first": "Set up people in <a href=\"/config\">Settings</a> first.",
+    "invalid_value": "Invalid value"
+  },
+  "locale": {
+    "pt_label": "Portuguese",
+    "en_label": "English"
+  },
+  "nav": {
+    "overview": "Overview",
+    "launch": "Post",
+    "recurring": "Recurring",
+    "division": "Split",
+    "accounts": "Accounts",
+    "stocks_eur": "Stocks €",
+    "stocks_usd": "Stocks US$",
+    "projection": "Projection",
+    "ir": "Tax",
+    "settings": "Settings"
+  },
+  "tier": {
+    "imediato": "Immediate",
+    "diferido": "Deferred",
+    "alocado": "Allocated",
+    "imediato_hint": "Money available immediately: checking accounts and easy-access savings.",
+    "diferido_hint": "Medium/long-term investments without immediate access (life insurance, REITs, etc.).",
+    "alocado_hint": "Money set aside for a specific purpose (taxes, travel, projects)."
+  },
+  "account_type": {
+    "checking": "Checking Account",
+    "savings": "Savings",
+    "variable": "Variable"
+  },
+  "recurring_kind": {
+    "fixed": "Fixed",
+    "installment": "Installments"
+  },
+  "trade_kind": {
+    "buy": "Buy",
+    "sell": "Sell"
+  },
+  "usd_kind": {
+    "vesting": "Vesting",
+    "sale": "Sale"
+  },
+  "kpis": {
+    "total": "Total"
+  },
+  "overview": {
+    "page_title": "Overview — Patrimônio",
+    "heading": "Overview",
+    "monthly_evolution": "Monthly evolution",
+    "history_available_after": "History available once entries are posted",
+    "recent_txns": "Recent entries",
+    "view_all": "View all →",
+    "no_txns_yet": "No entries yet.",
+    "chart_aria": "Wealth evolution"
+  },
+  "movimentos": {
+    "page_title": "Post — Patrimônio",
+    "heading": "Post a transaction",
+    "from_account_label": "From (account)",
+    "to_account_label": "To (account)",
+    "amount_label": "Amount (€)",
+    "until_label": "To",
+    "needs_resolution_label": "Track until resolved"
+  },
+  "recorrentes": {
+    "page_title": "Recurring — Patrimônio",
+    "heading": "Recurring rules",
+    "pending_banner": "⏳ {count} pending rule(s) for {period}.",
+    "post_all_button": "Post all",
+    "type_label": "Type",
+    "amount_label": "Amount (€)",
+    "day_label": "Day",
+    "installments_label": "Installments",
+    "start_label": "Start",
+    "end_label": "End (optional)",
+    "new_rule_button": "+ New recurring rule",
+    "new_rule_modal_title": "New recurring rule",
+    "category_filter_label": "Categories:"
+  },
+  "contas": {
+    "page_title": "Accounts — Patrimônio",
+    "heading": "Accounts",
+    "code_placeholder": "e.g. CC-BNP",
+    "opening_balance_label": "Opening balance",
+    "opening_date_label": "Opening date"
+  },
+  "conta_detail": {
+    "page_title": "{code} — Patrimônio",
+    "current_balance": "Current balance",
+    "opening_balance": "Opening balance",
+    "statement": "Statement",
+    "add_txn_button": "+ Transaction",
+    "add_txn_modal_title": "Add transaction",
+    "tab_once": "One-time",
+    "tab_recurring": "Recurring",
+    "valuations_section": "Monthly valuation",
+    "valuation_period_label": "Month",
+    "valuation_balance_label": "Balance (€)",
+    "no_valuations": "No valuations recorded.",
+    "contributed_label": "Total contributed",
+    "market_value_label": "Market value",
+    "unrealized_gain_label": "Unrealized gain/loss",
+    "col_contributions": "Contributions",
+    "col_gain": "Gain/loss",
+    "col_gain_pct": "Gain/loss %",
+    "valuation_chart_aria": "Balance evolution chart"
+  },
+  "acoes": {
+    "page_title": "Stocks € — Patrimônio",
+    "heading": "EUR Stocks",
+    "instrument_label": "Instrument",
+    "operation_label": "Operation",
+    "qty_label": "Qty.",
+    "price_label": "Price (€)",
+    "cost_label": "Costs (€)"
+  },
+  "acoes_detail": {
+    "page_title": "{ticker} — Patrimônio",
+    "trades_section": "Trades",
+    "no_trades": "No trades recorded.",
+    "col_realized": "Realized"
+  },
+  "acoes_us": {
+    "page_title": "Stocks US$ — Patrimônio",
+    "heading": "USD Stocks (SOUN)",
+    "total_gross_usd": "Total gross (USD)",
+    "total_net_usd": "Total net (USD)",
+    "withholding": "Withholding tax",
+    "total_net_eur": "Total net (EUR)",
+    "gross_label": "Gross (USD)",
+    "net_label": "Net (USD)",
+    "fx_label": "EUR/USD rate",
+    "fx_placeholder": "e.g. 1.08"
+  },
+  "divisao": {
+    "page_title": "Split — Patrimônio",
+    "heading": "Couple's split"
+  },
+  "split": {
+    "person_net_hint": "Net income (net before taxes − tax), before splitting fixed costs.",
+    "pct_of_total": "{pct} of total",
+    "joint_income": "Joint income",
+    "fixed_costs_month": "Fixed costs (month)",
+    "fixed_costs_hint": "Sum of this month's posted entries carrying the fixed-expense tag configured in Settings.",
+    "pct_of_joint_income": "{pct} of joint income",
+    "col_person": "Person",
+    "col_gross": "Gross",
+    "col_net_before_taxes": "Net before taxes",
+    "col_ir": "Tax",
+    "col_net": "Net",
+    "col_contribution": "Contribution",
+    "col_personal": "Personal",
+    "col_proportion": "Proportion"
+  },
+  "projecao": {
+    "page_title": "Projection — Patrimônio",
+    "heading": "Projection",
+    "next_months": "next {months} months",
+    "months_12": "12 m",
+    "months_24": "24 m",
+    "months_36": "36 m",
+    "add_accounts_hint": "Add accounts with balances to see the projection.",
+    "imediato_at": "Immediate at {period}",
+    "diferido_at": "Deferred at {period}",
+    "alocado_at": "Allocated at {period}",
+    "total_at": "Total at {period}",
+    "projected_evolution": "Projected evolution",
+    "monthly_detail": "Monthly detail",
+    "col_period": "Period",
+    "col_delta_month": "Δ month",
+    "chart_aria": "Wealth projection",
+    "no_chart_data": "No data for the chart."
+  },
+  "ir": {
+    "page_title": "Tax — Patrimônio",
+    "heading": "Income Tax",
+    "description": "Simplified calculation (marginal bracket, no family quotient). Taxable income is estimated from the 12-month average of net before taxes.",
+    "brackets_section": "Brackets",
+    "reset_defaults_button": "Reset to 2024 values",
+    "from_eur": "From (€)",
+    "to_eur": "To (€)",
+    "rate": "Rate",
+    "no_brackets": "No brackets.",
+    "load_defaults_button": "Load 2024 defaults",
+    "annual_ir_label": "Annual tax — {name}",
+    "annual_ir_hint": "Tax applying the progressive brackets to taxable income (12-month average of net before taxes, annualized).",
+    "effective_rate": "{pct} effective",
+    "monthly_ir_label": "Monthly tax — {name}",
+    "monthly_ir_hint": "Annual tax ÷ 12.",
+    "delta_vs_declared": "Δ {amount} vs. declared rate",
+    "delta_equal": "Same as declared rate",
+    "col_person": "Person",
+    "col_gross_annual": "Annual gross",
+    "col_deduction": "Deduction (estimate)",
+    "col_taxable": "Taxable income",
+    "col_annual_ir": "Annual tax",
+    "col_monthly_calc": "Monthly tax (calc.)",
+    "col_monthly_declared": "Monthly tax (declared rate)",
+    "col_monthly_declared_hint": "Gross/month × withholding rate declared in Settings.",
+    "col_diff": "Difference"
+  },
+  "configuracoes": {
+    "page_title": "Settings — Patrimônio",
+    "heading": "Settings",
+    "pfu_section": "PFU (capital gains rate)",
+    "pfu_label": "PFU rate (e.g. 0.30)",
+    "current_value": "Current value:",
+    "fixed_expense_tag_section": "Fixed expenses tag",
+    "fixed_expense_tag_label": "Tag that sums the couple's fixed expenses",
+    "no_tag_selected": "None",
+    "people_section": "People",
+    "gross_label": "Gross/month (€)",
+    "net_before_taxes_label": "Net before taxes/month (€)",
+    "net_before_taxes_avg_label": "Net before taxes (12-month avg) (€)",
+    "ir_rate_label": "Withholding rate (%)",
+    "add_person_button": "Add person"
+  },
+  "cfg_salaries": {
+    "col_person": "Person",
+    "col_gross": "Gross/month",
+    "col_net_before_taxes": "Net before taxes/month",
+    "col_net_before_taxes_avg": "Net before taxes (12-mo avg)",
+    "col_net_before_taxes_avg_hint": "Average of the last 12 months; used to estimate taxable income in the Tax section.",
+    "col_ir": "Tax/month",
+    "col_net": "Net",
+    "no_people": "No people configured."
+  },
+  "account_list": {
+    "no_accounts_registered": "No accounts registered."
+  },
+  "account_statement": {
+    "col_in": "In",
+    "col_out": "Out",
+    "no_movements": "No transactions."
+  },
+  "expenses": {
+    "hint": "Expenses derived from categorized transactions will appear here."
+  },
+  "ledger": {
+    "pending_heading": "Pending",
+    "regular_heading": "Transactions",
+    "no_pending": "No pending transactions.",
+    "page_summary": "{total} entries — page {page} of {total_pages}",
+    "prev_button": "← Previous",
+    "next_button": "Next →"
+  },
+  "ops": {
+    "hint": "Operations history will appear here."
+  },
+  "positions": {
+    "col_ticker": "Ticker",
+    "col_qty": "Qty.",
+    "col_avg_cost": "Avg. cost",
+    "col_current_price": "Current price",
+    "col_value": "Value",
+    "col_pl": "+/−",
+    "no_positions": "No open positions."
+  },
+  "recurring_list": {
+    "col_progress": "Progress",
+    "col_status": "Status",
+    "continuous": "ongoing",
+    "remaining": "{count} remaining",
+    "status_pending": "pending",
+    "status_ok": "ok",
+    "no_active_rules": "No active rules.",
+    "no_finished_rules": "No finished rules.",
+    "active_section": "Active",
+    "finished_section": "Finished",
+    "tab_list": "List",
+    "tab_by_account": "By account",
+    "rule_count": "{count} rule(s)",
+    "config_modal_title": "Rule settings",
+    "notes_label": "Note",
+    "config_tooltip": "Notes and tags",
+    "tags_placeholder": "e.g. home, fixed",
+    "fixed_expense_marker_tooltip": "Counts toward the couple's fixed expenses total"
+  },
+  "usd_events": {
+    "col_gross_usd": "Gross (USD)",
+    "col_net_usd": "Net (USD)",
+    "col_withholding": "Withholding",
+    "col_fx": "Rate",
+    "col_net_eur": "Net (EUR)",
+    "no_events": "No events recorded."
+  },
+  "resolution": {
+    "pending_label": "Pending",
+    "resolved_label": "Resolved",
+    "modal_title": "Resolve transaction",
+    "pair_label": "Matching transaction",
+    "pair_placeholder": "Search transactions...",
+    "pair_no_results": "No transactions found.",
+    "note_label": "Resolution note",
+    "resolve_button": "Resolve",
+    "unresolve_button": "Undo resolution",
+    "error_required": "Provide the matching transaction or a note",
+    "flag_tooltip": "Flag for tracking"
+  },
+  "txn_notes": {
+    "badge_tooltip": "Notes",
+    "modal_title": "Notes",
+    "empty": "No notes yet.",
+    "add_label": "New note",
+    "add_placeholder": "Write a note...",
+    "add_button": "Add note",
+    "delete_confirm": "Remove this note?"
+  }
+}

@@ -1,0 +1,162 @@
+{% from "partials/_editable_cell.html" import editable_cell %}
+{% macro rule_edit_url(rule_id, field) -%}
+/recorrentes/{{ rule_id }}/field/{{ field }}/edit
+{%- endmacro %}
+{% macro description_cell(rule) -%}
+{% set tags_list = (rule.tags or "").split(",") | map("trim") | list %}
+{{ rule.description }}{% if fixed_expense_tag and fixed_expense_tag in tags_list %}<span class="tag-marker" title="{{ t('recurring_list.fixed_expense_marker_tooltip') }}">●</span>{% endif %}
+{%- endmacro %}
+{% macro rules_table(rules, empty_message) %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ t('common.table.description') }}</th>
+        <th>{{ t('common.table.category') }}</th>
+        <th>{{ t('common.table.from') }}</th>
+        <th>{{ t('common.table.to') }}</th>
+        <th class="num">{{ t('common.table.amount') }}</th>
+        <th>{{ t('recorrentes.day_label') }}</th>
+        <th>{{ t('projecao.col_period') }}</th>
+        <th>{{ t('recurring_list.col_progress') }}</th>
+        <th>{{ t('recurring_list.col_status') }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rule in rules %}
+      <tr data-category="{{ rule.category or '' }}">
+        {{ editable_cell(rule_edit_url(rule.id, "description"), description_cell(rule), safe=True) }}
+        {{ editable_cell(rule_edit_url(rule.id, "category"), rule.category or "—") }}
+        {{ editable_cell(rule_edit_url(rule.id, "from_account"), account_codes.get(rule.from_account, "—")) }}
+        {{ editable_cell(rule_edit_url(rule.id, "to_account"), account_codes.get(rule.to_account, "—")) }}
+        {{ editable_cell(rule_edit_url(rule.id, "amount_cents"), rule.amount_cents | eur, "num") }}
+        {{ editable_cell(rule_edit_url(rule.id, "day_of_month"), rule.day_of_month) }}
+        <td style="font-size:0.8rem;color:var(--ink-muted)">
+          {{ rule.start_period or "—" }} &rarr; {{ rule.end_period or t('recurring_list.continuous') }}
+        </td>
+        <td>
+          {% set prog = progress.get(rule.id) %}
+          {% if rule.kind == "installment" and prog and prog[1] %}
+          {{ t('recurring_list.remaining', count=prog[1] - prog[0]) }}
+          {% else %}
+          —
+          {% endif %}
+        </td>
+        <td>
+          {% if rule.id in pending_ids %}
+          <span style="color:var(--tier-diferido);font-size:0.8rem">{{ t('recurring_list.status_pending') }}</span>
+          {% else %}
+          <span style="color:var(--pos);font-size:0.8rem">{{ t('recurring_list.status_ok') }}</span>
+          {% endif %}
+        </td>
+        <td>
+          <div style="display:flex;align-items:center;gap:0.35rem;flex-wrap:nowrap">
+          {% if rule.id in pending_ids %}
+          <form hx-post="/recorrentes/{{ rule.id }}/post" hx-target="#recurring-list" hx-swap="outerHTML">
+            <input type="hidden" name="period" value="{{ period }}">
+            <button type="submit" class="btn btn--primary" style="font-size:0.75rem;padding:0.25rem 0.6rem">{{ t('common.actions.post') }}</button>
+          </form>
+          <form hx-post="/recorrentes/{{ rule.id }}/skip" hx-target="#recurring-list" hx-swap="outerHTML">
+            <input type="hidden" name="period" value="{{ period }}">
+            <button type="submit" class="btn btn--secondary" style="font-size:0.75rem;padding:0.25rem 0.6rem">{{ t('common.actions.skip') }}</button>
+          </form>
+          {% endif %}
+          <button
+            type="button"
+            class="btn btn--ghost"
+            style="{% if rule.notes or rule.tags %}color:var(--accent){% endif %}"
+            title="{{ t('recurring_list.config_tooltip') }}"
+            aria-label="{{ t('recurring_list.config_tooltip') }}"
+            hx-get="/recorrentes/{{ rule.id }}/config/edit"
+            hx-target="#config-modal-container"
+            hx-swap="innerHTML"
+          >⚙️</button>
+          <button
+            type="button"
+            class="btn btn--ghost"
+            style="color:var(--neg)"
+            title="{{ t('common.remove_rule') }}"
+            aria-label="{{ t('common.remove_rule') }}"
+            data-delete-rule
+            data-delete-url="/recorrentes/{{ rule.id }}"
+            hx-delete="/recorrentes/{{ rule.id }}?delete_txns=false"
+            hx-target="#recurring-list"
+            hx-swap="outerHTML"
+          >🗑</button>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="10" style="color:var(--ink-muted);text-align:center;padding:2rem">
+          {{ empty_message }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endmacro %}
+{% macro kind_subsections(rules, empty_message) %}
+<div class="section-header" style="margin-top:1rem">
+  <span class="section-title" style="font-size:0.85rem;color:var(--ink-muted)">{{ t('recurring_kind.fixed') }}</span>
+</div>
+{{ rules_table(rules | selectattr("kind", "equalto", "fixed") | list, empty_message) }}
+
+<div class="section-header" style="margin-top:1rem">
+  <span class="section-title" style="font-size:0.85rem;color:var(--ink-muted)">{{ t('recurring_kind.installment') }}</span>
+</div>
+{{ rules_table(rules | selectattr("kind", "equalto", "installment") | list, empty_message) }}
+{% endmacro %}
+
+{% include "partials/_pending_banner.html" %}
+<div id="recurring-list">
+  <div data-panel="list">
+    <div class="section-header">
+      <span class="section-title">{{ t('recurring_list.active_section') }}</span>
+    </div>
+    {{ kind_subsections(active_rules, t('recurring_list.no_active_rules')) }}
+
+    <div class="section-header" style="margin-top:1.5rem">
+      <span class="section-title">{{ t('recurring_list.finished_section') }}</span>
+    </div>
+    {{ kind_subsections(finished_rules, t('recurring_list.no_finished_rules')) }}
+  </div>
+
+  <div data-panel="by-account" hidden>
+    {% for group in account_groups %}
+    <details class="account-group">
+      <summary class="account-group__summary">
+        <span class="account-group__name">{{ account_codes.get(group.account, t('common.placeholder.external')) }}</span>
+        <span class="account-group__count">{{ t('recurring_list.rule_count', count=group.flows|length) }}</span>
+        <span class="account-group__total num {{ 'pos' if group.total_cents >= 0 else 'neg' }}">{{ group.total_cents | eur }}</span>
+      </summary>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>{{ t('common.table.description') }}</th>
+              <th>{{ t('common.table.category') }}</th>
+              <th class="num">{{ t('common.table.amount') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for flow in group.flows %}
+            <tr>
+              <td>{{ flow.rule.description }}</td>
+              <td>{{ flow.rule.category or "—" }}</td>
+              <td class="num {{ 'pos' if flow.direction == 'in' else 'neg' }}">
+                {{ '+' if flow.direction == 'in' else '−' }}{{ flow.rule.amount_cents | eur }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+    {% else %}
+    <p style="color:var(--ink-muted);text-align:center;padding:2rem">{{ t('recurring_list.no_active_rules') }}</p>
+    {% endfor %}
+  </div>
+</div>

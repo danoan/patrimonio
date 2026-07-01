@@ -1,0 +1,51 @@
+<dialog id="resolve-modal" class="modal">
+  <div class="modal__panel">
+    <div class="modal__header">
+      <h2 class="modal__title">{{ t('resolution.modal_title') }}</h2>
+      <button type="button" class="modal__close" data-modal-close aria-label="{{ t('common.close') }}">&times;</button>
+    </div>
+    <form hx-post="{{ resolve_url }}" hx-target="{{ target }}" hx-swap="outerHTML" data-modal-form class="modal__body">
+      <p style="color:var(--ink-muted);font-size:0.875rem;margin-bottom:1rem">
+        {{ txn.date }} — {{ txn.comment or txn.category or "—" }} — {{ txn.amount_cents | eur }}
+      </p>
+      <div class="field-grid">
+        <div class="field field--span2">
+          <label for="rs-pair-search">{{ t('resolution.pair_label') }}</label>
+          <div class="pair-picker">
+            <input type="hidden" name="resolved_txn_id" data-pair-hidden value="{{ txn.resolved_txn_id or '' }}">
+            <input
+              id="rs-pair-search"
+              type="text"
+              name="q"
+              data-pair-search
+              autocomplete="off"
+              value="{{ current_pair_label or '' }}"
+              placeholder="{{ t('resolution.pair_placeholder') }}"
+              hx-get="/movimentos/{{ txn.id }}/resolve/candidates"
+              hx-trigger="keyup changed delay:300ms, focus"
+              hx-target="[data-pair-results]"
+              hx-swap="innerHTML"
+              hx-include="this"
+            >
+            <button type="button" data-pair-clear class="btn btn--ghost" title="{{ t('common.actions.clear') }}">&times;</button>
+            <div data-pair-results class="pair-picker__results"></div>
+          </div>
+        </div>
+        <div class="field field--span2">
+          <label for="rs-note">{{ t('resolution.note_label') }}</label>
+          <textarea id="rs-note" name="resolution_note">{{ txn.resolution_note or "" }}</textarea>
+        </div>
+      </div>
+      {% if error %}<div class="editable-error">{{ error }}</div>{% endif %}
+      <div class="modal__actions">
+        {% if is_resolved(txn) %}
+        <button type="button" class="btn btn--secondary" hx-delete="{{ resolve_url }}" hx-target="{{ target }}" hx-swap="outerHTML">
+          {{ t('resolution.unresolve_button') }}
+        </button>
+        {% endif %}
+        <button type="button" class="btn btn--secondary" data-modal-close>{{ t('common.actions.cancel') }}</button>
+        <button type="submit" class="btn btn--primary">{{ t('resolution.resolve_button') }}</button>
+      </div>
+    </form>
+  </div>
+</dialog>
